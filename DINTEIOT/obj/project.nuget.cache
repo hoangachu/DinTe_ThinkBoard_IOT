@@ -1,0 +1,12 @@
+{
+  "version": 2,
+  "dgSpecHash": "qg9ihHqaQZsZP7xuNv+O+FvexBwonTAvnGXdAKiM2p9D26A6wtkbFBH5060naiCD0UT1nXwokRwx3bDxA7dUdw==",
+  "success": true,
+  "projectFilePath": "C:\\Document\\DinTe_IOT\\DINTEIOT\\DINTEIOT.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\Administrator\\.nuget\\packages\\microsoft.aspnetcore.app.ref\\5.0.0\\microsoft.aspnetcore.app.ref.5.0.0.nupkg.sha512",
+    "C:\\Users\\Administrator\\.nuget\\packages\\microsoft.windowsdesktop.app.ref\\5.0.0\\microsoft.windowsdesktop.app.ref.5.0.0.nupkg.sha512",
+    "C:\\Users\\Administrator\\.nuget\\packages\\microsoft.netcore.app.ref\\5.0.0\\microsoft.netcore.app.ref.5.0.0.nupkg.sha512"
+  ],
+  "logs": []
+}

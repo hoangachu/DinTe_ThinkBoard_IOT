@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.31410.357
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DINTEIOT", "DINTEIOT\DINTEIOT.csproj", "{BE6B0CC3-DAA7-4145-9ECD-B92B27A88A96}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{BE6B0CC3-DAA7-4145-9ECD-B92B27A88A96}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BE6B0CC3-DAA7-4145-9ECD-B92B27A88A96}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BE6B0CC3-DAA7-4145-9ECD-B92B27A88A96}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BE6B0CC3-DAA7-4145-9ECD-B92B27A88A96}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {3D168E5D-4B5F-4B38-B25B-287783D676DA}
+	EndGlobalSection
+EndGlobal
