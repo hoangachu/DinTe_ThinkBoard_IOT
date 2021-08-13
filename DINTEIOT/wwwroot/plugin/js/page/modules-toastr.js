@@ -1,4 +1,4 @@
-"use strict";
+﻿"use strict";
 
 $("#toastr-1").click(function() {
   iziToast.info({
@@ -63,3 +63,44 @@ $("#toastr-8").click(function() {
     position: 'topCenter' 
   });
 });
+
+//thông báo thông tin
+function toastrnotifyinfo(text) {
+    iziToast.info({
+        title: 'Thông tin !',
+        message: text,
+        position: 'topRight'
+    });
+}
+//thông báo thành công
+function toastrnotifysuccess(text) {
+    iziToast.success({
+        title: "Thành công !",
+        message: text,
+        position: 'topRight'
+    });
+}
+//thông báo lỗi
+function toastrnotifyerror(text) {
+    iziToast.error({
+        title: 'Lỗi !',
+        message: text,
+        position: 'topRight'
+    });
+}
+//thông báo cảnh báo
+function toastrnotifywarning(text) {
+    iziToast.warning({
+        title: 'Cảnh báo !',
+        message: text,
+        position: 'topRight'
+    });
+}
+//thong bao
+function toastrnotifyshow(text) {
+    iziToast.show({
+        title: 'Thông báo!',
+        message: text,
+        position: 'topRight'
+    });
+}

@@ -1,0 +1,44 @@
+﻿
+@{
+    Layout = null;
+    //WebApi.Helpers.OptionFilter OptionFilter = new WebApi.Helpers.OptionFilter();
+    //if (TempData["OptionFilter"] != null)
+    //{
+    //    OptionFilter = Newtonsoft.Json.JsonConvert.DeserializeObject<WebApi.Helpers.OptionFilter>((string)TempData["OptionFilter"]);
+    //    TempData.Keep();
+    //}
+
+}
+<nav class="d-inline-block">
+    <input id="pagenumber" value="@ViewBag.PageNumber" style="display:none" />
+    <input id="pagefirst" value="@ViewBag.PageFirst" style="display:none" />
+    <input id="currentpagename" value="@ViewBag.CurrentPageName" style="display:none" />
+    <ul class="pagination mb-0">
+        @if (ViewBag.TotalPage > 1)
+        {
+            <li class="page-item disabled previouspagination">
+                <a class="page-link" href="#" tabindex="-1"><i class="fas fa-chevron-left"></i></a>
+            </li>
+            <li class="page-item active"><a class="page-link" href="#">1 <span class="sr-only">(current)</span></a></li>
+            for (var i = 0; i < ViewBag.TotalPage.Count > 2 ? 2 : ViewBag.TotalPage.Count; i++)
+            {
+                <li class="page-item">
+                    <a class="page-link" href="#">@i</a>
+                </li>
+            }
+            <li class="page-item nextpagination">
+                <a class="page-link" href="#"><i class="fas fa-chevron-right"></i></a>
+            </li>
+        }
+        else
+        {
+            <li class="page-item disabled">
+                <a class="page-link" href="#" tabindex="-1"><i class="fas fa-chevron-left"></i></a>
+            </li>
+            <li class="page-item active"><a class="page-link" href="#">1 <span class="sr-only">(current)</span></a></li>
+            <li class="page-item disabled">
+                <a class="page-link" href="#"><i class="fas fa-chevron-right"></i></a>
+            </li>
+        }
+    </ul>
+</nav>

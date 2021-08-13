@@ -6,10 +6,10 @@ a.navbar-brand {
   text-align: center;
   word-break: break-all;
 }
-
+.nav-item > a > i > span{font-weight :bold}
 /* Provide sufficient contrast against white background */
 a {
-  color: #0366d6;
+    color: #0366d6;
 }
 
 .btn-primary {

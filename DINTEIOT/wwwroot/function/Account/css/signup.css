@@ -1,0 +1,27 @@
+﻿span.select2-container {
+    z-index: 10050;
+}
+.btn-icon {
+    background-color: #f1f3f5;
+    border: none;
+    width: 30px;
+}
+.fa-edit {
+    color: #17a2b8;
+    font-size: 14px !important;
+}
+.fa-trash {
+    color: red;
+    font-size: 14px !important;
+}
+.card-header-modal {
+    padding-left: 25px !important;
+}
+#app {
+    background-image: url('/images/signup_v1.png');
+    background-size: 30%;
+    background-repeat: no-repeat;
+}
+.card-primary {
+    margin-top: 120px;
+}

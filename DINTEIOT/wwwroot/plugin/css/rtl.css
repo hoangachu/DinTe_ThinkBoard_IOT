@@ -361,7 +361,7 @@ body.layout-3 .navbar.navbar-secondary .navbar-nav > .nav-item .dropdown-menu .n
 
 .alert-dismissible .close {
   position: absolute;
-  top: 0;
+  top: 0px !important;
   right: unset;
   left: 0; }
 

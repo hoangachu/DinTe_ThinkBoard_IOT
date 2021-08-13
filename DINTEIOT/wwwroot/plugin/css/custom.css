@@ -6,3 +6,38 @@
  */
 
 /*# sourceMappingURL=custom.css.map */
+span[id^="jqxWidget"] {
+    color: transparent !important;
+}
+lord-icon {
+    cursor:pointer
+}
+li > a >  span {
+    font-weight: bold !important;
+    /*color:black*/
+}
+   /* li > a > span :hover {
+        font-weight: bold !important;
+        color: #6777ef !important
+    }*/
+.btn-icon {
+    background-color: #f1f3f5;
+    border: none;
+    width: 40px !important;
+}
+
+.fa-edit {
+    color: #17a2b8;
+    font-size: 14px !important;
+    font-weight: 900 !important;
+}
+
+.fa-trash {
+    color: red;
+    font-size: 14px !important;
+    font-weight: 900 !important;
+}
+.fa-eye {
+    font-weight: bold;
+    color: darkgreen;
+}

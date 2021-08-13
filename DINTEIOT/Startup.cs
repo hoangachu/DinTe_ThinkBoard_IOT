@@ -1,3 +1,5 @@
+using DINTEIOT.Controllers;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -13,17 +15,30 @@ namespace DINTEIOT
 {
     public class Startup
     {
+        public IConfiguration Configuration { get; }
+        public static string connectionString = "";
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
+            connectionString = Configuration.GetConnectionString("DefaultConnection").ToString();
         }
-
-        public IConfiguration Configuration { get; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddScoped<IStationDataController, StationDataController>();
+            services.AddScoped<IOrganController,OrganController>();
+            services.AddScoped<IMonitorStationController, MonitorStationController>();
             services.AddControllersWithViews();
+            services.AddAuthentication(x =>
+            {
+                x.DefaultAuthenticateScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+            })
+                 .AddCookie(options =>
+                 {
+                     options.LoginPath = "/account/login";
+                     options.Cookie.Name = "ac_session";
+                 });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -44,13 +59,14 @@ namespace DINTEIOT
 
             app.UseRouting();
 
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllerRoute(
                     name: "default",
-                    pattern: "{controller=Home}/{action=Index}/{id?}");
+                    pattern: "{controller=Login}/{action=index}/{id?}");
             });
         }
     }

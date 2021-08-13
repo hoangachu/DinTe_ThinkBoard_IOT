@@ -1914,11 +1914,11 @@ pre code {
   opacity: 1;
 }
 
-.form-control:disabled, .form-control[readonly] {
+/*.form-control:disabled, .form-control[readonly] {
   background-color: #e9ecef;
   opacity: 1;
 }
-
+*/
 select.form-control:focus::-ms-value {
   color: #495057;
   background-color: #fff;
@@ -2030,9 +2030,9 @@ textarea.form-control {
   margin-left: -1.25rem;
 }
 
-.form-check-input:disabled ~ .form-check-label {
+/*.form-check-input:disabled ~ .form-check-label {
   color: #6c757d;
-}
+}*/
 
 .form-check-label {
   margin-bottom: 0;
@@ -3255,6 +3255,7 @@ input[type="button"].btn-block {
   color: #6c757d;
   pointer-events: none;
   background-color: transparent;
+ 
 }
 
 .dropdown-menu.show {

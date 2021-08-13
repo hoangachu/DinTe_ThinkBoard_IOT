@@ -1,0 +1,104 @@
+﻿@model List<DINTEIOT.Models.StationData.StationData>
+@{ 
+    WebApi.Helpers.OptionFilter OptionFilter = new WebApi.Helpers.OptionFilter();
+    if (TempData["OptionFilter"] != null)
+    {
+        OptionFilter = Newtonsoft.Json.JsonConvert.DeserializeObject<WebApi.Helpers.OptionFilter>((string)TempData["OptionFilter"]);
+        TempData.Keep();
+    }
+}
+<link href="~/function/stationdata/css/index.css" rel="stylesheet" />
+<div class="main-content">
+    <section class="section">
+        <div class="section-header">
+            <h1>Quản lý loại dữ liệu quan trắc</h1>
+            <input class="form-control search inputfilter" type="search" placeholder="Nhập và nhấn Enter để tìm kiếm" aria-label="Search" data-width="250" style="" id="txtsearch" value="@OptionFilter.txtsearch">
+            <div class="section-header-breadcrumb">
+                <ul class="nav nav-pills active">
+                    <li class="nav-item">
+                        <a data-toggle="modal" data-target="" class="nav-link " href="#" onclick="ShowCreateStationData()">
+                            <i class="fas fa-plus" data-placement="bottom"></i> Thêm mới
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="section-body">
+            <div class="row">
+                <div class="col-12 col-md-12 col-lg-12">
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table class="table table-bordered table-md">
+                                    <tr>
+                                        <th>Tên loại dữ liệu</th>
+                                        <th>Mã loại dữ liệu</th>
+                                        <th></th>
+                                    </tr>
+                                    @foreach (var item in Model)
+                                    {
+                                        <tr>
+                                            <td>@item.stationDataName</td>
+                                            <td>@item.stationDataCode</td>
+                                            <td style="text-align:center">
+                                                <button class="btn btn-icon" id="" onclick="ShowEditStationData(@item.stationDataId)" data-toggle="tooltip" data-placement="bottom" data-original-title="Sửa loại dữ liệu">
+                                                    <i class="far fa-edit" >
+                                                    </i>
+                                                </button>
+                                                <button data-toggle="tooltip" data-placement="bottom" data-original-title="Xóa loại dữ liệu" href="" class="btn btn-icon" style="margin-left:5px" id="">
+                                                    <i class="fas fa-trash"></i>
+                                                </button>
+                                            </td>
+                                        </tr>
+                                    }
+
+                                </table>
+                            </div>
+                        </div>
+                        <div class="card-footer text-right">
+                            @{ Html.RenderPartial("~/Views/Shared/_Pagination.cshtml"); }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+
+<!--modal thêm mới,sửa-->
+<div class="modal fade" role="dialog" id="ModalAddorEditLoaiDuLieu">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-body">
+                <div class="card">
+                    <form class="needs-validation" novalidate="">
+                        <input value="" id="stationDataId" style="display:none" />
+                        <div class="card-header card-header-modal">
+                            <h4 id="stationdatamodaltitle"></h4>
+                        </div>
+                        <div class="card-body" style=" margin-left: -40px;">
+                            <div class="form-group">
+                                <label>Tên loại dữ liệu<b style="color:red">*</b></label>
+                                <input type="text" class="form-control" required="" id="stationDataName">
+                            </div>
+
+                            <div class="form-group">
+                                <label>Mã loại dữ liệu<b style="color:red">*</b></label>
+                                <input type="text" class="form-control" id="stationDataCode">
+                            </div>
+                        </div>
+                        <div class="card-footer text-right">
+                            <button class="btn btn-primary" id="btnsaveloaidulieu" onclick="">Lưu</button>
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    stationdataindex.stationdataindex_init();
+</script>
+
