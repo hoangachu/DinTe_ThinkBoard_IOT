@@ -1,0 +1,9 @@
+﻿.form-row {
+    padding: 200px;
+}
+body {
+    /*background-color: aliceblue;*/
+    background-image: url('/images/Security-rafiki.png');
+    background-size: 40%;
+    background-repeat: no-repeat;
+}

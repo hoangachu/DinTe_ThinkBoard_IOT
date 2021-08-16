@@ -12,7 +12,6 @@
     <section class="section">
         <div class="section-header">
             <h1>Quản lý loại dữ liệu quan trắc</h1>
-            <input class="form-control search inputfilter" type="search" placeholder="Nhập và nhấn Enter để tìm kiếm" aria-label="Search" data-width="250" style="" id="txtsearch" value="@OptionFilter.txtsearch">
             <div class="section-header-breadcrumb">
                 <ul class="nav nav-pills active">
                     <li class="nav-item">
@@ -28,6 +27,11 @@
             <div class="row">
                 <div class="col-12 col-md-12 col-lg-12">
                     <div class="card">
+                        <div class="card-header">
+                            <form class="card-header-form">
+                                <input class="form-control search inputfilter" type="search" placeholder="Nhập và nhấn Enter để tìm kiếm" aria-label="Search" data-width="250" style="" id="txtsearch" value="@OptionFilter.txtsearch">
+                            </form>
+                        </div>
                         <div class="card-body">
                             <div class="table-responsive">
                                 <table class="table table-bordered table-md">
@@ -43,7 +47,7 @@
                                             <td>@item.stationDataCode</td>
                                             <td style="text-align:center">
                                                 <button class="btn btn-icon" id="" onclick="ShowEditStationData(@item.stationDataId)" data-toggle="tooltip" data-placement="bottom" data-original-title="Sửa loại dữ liệu">
-                                                    <i class="far fa-edit" >
+                                                    <i class="far fa-edit">
                                                     </i>
                                                 </button>
                                                 <button data-toggle="tooltip" data-placement="bottom" data-original-title="Xóa loại dữ liệu" href="" class="btn btn-icon" style="margin-left:5px" id="">

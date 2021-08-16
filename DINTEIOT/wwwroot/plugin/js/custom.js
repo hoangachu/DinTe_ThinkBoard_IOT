@@ -19,4 +19,3 @@ $(".btnsignout").on('click', function () {
     });
 
 });
-

@@ -363,19 +363,16 @@ namespace GovermentPortal.Areas.Admin.Controllers
                         {
                             con.Open();
                             cmd.CommandType = CommandType.StoredProcedure;
-                            cmd.Parameters.Add("@code", SqlDbType.VarChar).Value = userName == null ? DBNull.Value : userName.Trim();
+                            cmd.Parameters.Add("@userName", SqlDbType.VarChar).Value = userName == null ? DBNull.Value : userName.Trim();
                             cmd.Parameters.Add("@id", SqlDbType.Int).Value = id;
                             SqlDataReader dr = cmd.ExecuteReader();
 
                             while (dr.Read())
                             {
-                                account.accountID = dr.IsDBNull("UserId") == true ? 0 : (int)dr["UserId"];
+                                account.accountID = dr.IsDBNull("accountID") == true ? 0 : (int)dr["accountID"];
                                 account.username = dr.IsDBNull("Username") == true ? "" : (string)dr["Username"];
                                 account.fullName = dr.IsDBNull("fullName") == true ? "" : (string)dr["fullName"];
                                 account.status = dr.IsDBNull("status") == true ? 0 : (int)dr["status"];
-                                account.roleid = dr.IsDBNull("roleid") == true ? 0 : (int)dr["roleid"];
-                                account.organ = new Organ();
-                                account.organ.organname = dr.IsDBNull("organname") == true ? "" : (string)dr["organname"];
                                 account.phoneNumber = dr.IsDBNull("phonenumber") == true ? 0 : (int)dr["phonenumber"];
                                 account.email = dr.IsDBNull("email") == true ? "" : (string)dr["email"];
                                 break;

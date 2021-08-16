@@ -49,6 +49,7 @@ namespace WebApi.Helpers
         public const string StationDriver = " StationDriver";
         public const string StationMethod = " StationMethod";
         public const string Account = " Account";
+        public const string MonitorDatabase = "MonitorDatabase";
     }
     public static class Vi_ScreenName
     {

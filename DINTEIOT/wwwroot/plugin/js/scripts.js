@@ -1,7 +1,11 @@
 ﻿"use strict";
-//$('.select2').select2({
-//    placeholder: 'Select an option'
-//});
+
+$('.datepicker').daterangepicker({
+    singleDatePicker: true,
+    locale: {
+        format: 'DD/MM/YYYY'
+    }
+});
 jQuery.noConflict(true);
 
 // ChartJS

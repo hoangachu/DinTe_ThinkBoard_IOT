@@ -1,0 +1,50 @@
+﻿span.select2-container {
+    z-index: 10050;
+}
+
+.btn-icon {
+    background-color: #f1f3f5;
+    border: none;
+    width: 30px;
+}
+
+.fa-edit {
+    color: #17a2b8;
+    font-size: 14px !important;
+}
+
+.fa-trash {
+    color: red;
+    font-size: 14px !important;
+}
+
+.card.card-primary{
+    margin-top:80px
+}
+
+.card-header > span {
+    width: 15% !important;
+}
+
+.selectfilter {
+    width: 15%
+}
+
+.card-header-modal {
+    padding-left: 30px !important;
+}
+
+.modal-dialog {
+    height: inherit;
+}
+
+.modal-content {
+    height: 0%
+}
+
+#app {
+    background-image: url('/images/bk_login_v1.png');
+    background-size: 40%;
+    background-repeat: no-repeat;
+}
+

@@ -1,0 +1,149 @@
+﻿@model List<DINTEIOT.Models.StationDriver.StationDriver>
+@{
+    DINTEIOT.Models.StationDriver.StationDriverFilter stationDriverFilter = new DINTEIOT.Models.StationDriver.StationDriverFilter();
+    if (TempData["OptionFilter"] != null)
+    {
+        stationDriverFilter = Newtonsoft.Json.JsonConvert.DeserializeObject<DINTEIOT.Models.StationDriver.StationDriverFilter>((string)TempData["OptionFilter"]);
+        TempData.Keep();
+    }
+}
+<link href="~/function/stationdriver/css/index.css" rel="stylesheet" />
+<div class="main-content">
+    <section class="section">
+        <div class="section-header">
+            <h1>Phương tiện quan trắc</h1>
+            <div class="section-header-breadcrumb">
+                <ul class="nav nav-pills active">
+                    <li class="nav-item">
+                        <a data-toggle="modal" data-target="" class="nav-link " href="#" onclick="ShowCreatestationDriver()">
+                            <i class="fas fa-plus" data-placement="bottom"></i> Thêm mới
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="section-body">
+            <div class="row">
+                <div class="col-12 col-md-12 col-lg-12">
+                    <div class="card">
+                        <div class="card-header">
+                            <select class="form-control selectfilter inputfilter" placeholder="" id="MonitorStationfilter" style="">
+                                @if (ViewBag.TramQuanTrac.Count > 0)
+                                {
+                                    <option class="" value="0">Tất cả</option>
+                                    @foreach (var item in ViewBag.TramQuanTrac)
+                                    {
+                                        @if (stationDriverFilter.monitorStationID == item.monitorStationID)
+                                        {
+                                            <option class="" value="@item.monitorStationID" selected>@item.monitorStationName</option>
+                                        }
+                                        else
+                                        {
+                                            <option class="" value="@item.monitorStationID">@item.monitorStationName</option>
+                                        }
+
+                                    }
+                                }
+                            </select>
+                            <form class="card-header-form">
+                                <input class="form-control search inputfilter" type="search" placeholder="Nhập và nhấn Enter để tìm kiếm" aria-label="Search" data-width="250" style="" id="txtsearch" value="@stationDriverFilter.txtsearch">
+                            </form>
+
+                        </div>
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table class="table table-bordered table-md">
+                                    <tr>
+                                        <th>Tên phương tiện</th>
+                                        <th>Mã phương tiện</th>
+                                        <th>Trạm quan trắc</th>
+                                        <th></th>
+                                    </tr>
+                                    @foreach (var item in Model)
+                                    {
+                                        <tr>
+                                            <td>@item.stationDriverName</td>
+                                            <td>@item.stationDriverCode</td>
+                                            <td>@item.monitorStationName</td>
+                                            <td style="text-align:center">
+                                                <button class="btn btn-icon" id="" onclick="ShowEditstationDriver(@item.stationDriverID)" data-toggle="tooltip" data-placement="bottom" data-original-title="Sửa trạm cảnh báo">
+                                                    <i class="far fa-edit">
+                                                    </i>
+                                                </button>
+                                                <button data-toggle="tooltip" data-placement="bottom" data-original-title="Xóa trạm quan trắc" href="" class="btn btn-icon" style="margin-left:5px" id="">
+                                                    <i class="fas fa-trash"></i>
+                                                </button>
+                                            </td>
+                                        </tr>
+                                    }
+                                </table>
+                            </div>
+                        </div>
+                        <div class="card-footer text-right">
+                            @{ Html.RenderPartial("~/Views/Shared/_Pagination.cshtml"); }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+
+<!--modal thêm mới,sửa-->
+<div class="modal fade" role="dialog" id="ModalAddorEditPTQuanTrac">
+    <div class="modal-dialog" role="document" style="height: inherit; ">
+        <div class="modal-content">
+            <div class="modal-body">
+                <div class="card">
+                    <form class="" novalidate="">
+                        <input value="" id="stationDriverID" style="display:none" />
+                        <div class="card-header card-header-modal">
+                            <h4 id="stationDrivermodaltitle"></h4>
+                        </div>
+                        <div class="card-body" style=" margin-left: -40px;">
+                            <div class="form-group">
+                                <label>Tên trạm<b style="color:red">*</b></label>
+                                <input type="text" class="form-control" required="" id="stationDriverName">
+                            </div>
+                            <div class="form-group">
+                                <label>Mã trạm<b style="color:red">*</b></label>
+                                <input type="text" class="form-control" required="" id="stationDriverCode">
+                            </div>
+                            <div class="form-group">
+                                <label>Loại thiết bị</label>
+                                <input type="text" class="form-control" required="" id="stationDriverType">
+                            </div>
+                            <div class="form-group">
+                                <label>Trạm quan trắc<b style="color:red">*</b></label>
+                                <select class="form-control" data-placeholder="Chọn trạm" id="monitorStationID">
+                                    <option value=""></option>
+                                    @if (ViewBag.TramQuanTrac.Count > 0)
+                                    {
+                                        @foreach (var item in ViewBag.TramQuanTrac)
+                                        {
+                                            <option class="l1 non-leaf" value="@item.monitorStationID">@item.monitorStationName</option>
+                                        }
+                                    }
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>Mô tả</label>
+                                <input type="text" class="form-control" id="description">
+                            </div>
+                        </div>
+                        <div class="card-footer text-right">
+                            <button class="btn btn-primary" id="btnsavetramquantrac" onclick="">Lưu</button>
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    $("#monitorStationID").select2ToTree();
+    stationDriverindex.stationDriverindex_init();
+</script>
+

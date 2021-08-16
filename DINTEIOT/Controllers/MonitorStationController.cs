@@ -15,6 +15,7 @@ namespace DINTEIOT.Controllers
     public interface IMonitorStationController
     {
         public List<MonitorStation> GetAllListMonitorStation();
+        public List<MonitorStation> GetListMonitorStation(MonitorStationFilter MonitorStationFilter);
     }
     public class MonitorStationController : BaseController, IMonitorStationController  // Trạm quan trắc
     {

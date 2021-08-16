@@ -1,0 +1,172 @@
+﻿@model List<DINTEIOT.Models.MonitorStation.MonitorStation>
+@{
+    DINTEIOT.Models.MonitorStation.MonitorStationFilter monitorStationFilter = new DINTEIOT.Models.MonitorStation.MonitorStationFilter();
+    if (TempData["OptionFilter"] != null)
+    {
+        monitorStationFilter = Newtonsoft.Json.JsonConvert.DeserializeObject<DINTEIOT.Models.MonitorStation.MonitorStationFilter>((string)TempData["OptionFilter"]);
+        TempData.Keep();
+    }
+}
+<link href="~/function/monitorstation/css/index.css" rel="stylesheet" />
+<div class="main-content">
+    <section class="section">
+        <div class="section-header">
+            <h1>Trạm quan trắc</h1>
+            @*<input class="form-control search inputfilter" type="search" placeholder="Nhập và nhấn Enter để tìm kiếm" aria-label="Search" data-width="250" style="" id="txtsearch" value="@OptionFilter.txtsearch">*@
+            <div class="section-header-breadcrumb">
+                <ul class="nav nav-pills active">
+                    <li class="nav-item">
+                        <a data-toggle="modal" data-target="" class="nav-link " href="#" onclick="ShowCreatemonitorStation()">
+                            <i class="fas fa-plus" data-placement="bottom"></i> Thêm mới
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="section-body">
+            <div class="row">
+                <div class="col-12 col-md-12 col-lg-12">
+                    <div class="card">
+                        <div class="card-header">
+                            <select class="form-control selectfilter inputfilter" placeholder="Chọn đơn vị" id="OrganIDfilter" style="">
+                                @if (ViewBag.CoQuan.Count > 0)
+                                {
+                                    <option class="l1 non-leaf" value="0">Tất cả</option>
+                                    @foreach (var item in ViewBag.CoQuan)
+                                    {
+                                        @if (monitorStationFilter.organID == item.id)
+                                        {
+                                            <option class="l1 non-leaf" value="@item.id" selected>@item.title</option>
+                                        }
+                                        else
+                                        {
+                                            <option class="l1 non-leaf" value="@item.id">@item.title</option>
+                                        }
+
+                                    }
+                                }
+                            </select>
+                            <form class="card-header-form">
+                                <input class="form-control search inputfilter" type="search" placeholder="Nhập và nhấn Enter để tìm kiếm" aria-label="Search" data-width="250" style="" id="txtsearch" value="@monitorStationFilter.txtsearch">
+                            </form>
+
+                        </div>
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table class="table table-bordered table-md">
+                                    <tr>
+                                        <th>Tên trạm</th>
+                                        <th>Mã trạm</th>
+                                        <th>Thuộc đơn vị</th>
+                                        <th></th>
+                                    </tr>
+                                    @foreach (var item in Model)
+                                    {
+                                        <tr>
+                                            <td>@item.monitorStationName</td>
+                                            <td>@item.monitorStationCode</td>
+                                            <td>@item.organName</td>
+                                            <td style="text-align:center">
+                                                <button class="btn btn-icon" id="" onclick="ShowEditmonitorStation(@item.monitorStationID)" data-toggle="tooltip" data-placement="bottom" data-original-title="Sửa trạm cảnh báo">
+                                                    <i class="far fa-edit">
+                                                    </i>
+                                                </button>
+                                                <button data-toggle="tooltip" data-placement="bottom" data-original-title="Xóa trạm quan trắc" href="" class="btn btn-icon" style="margin-left:5px" id="">
+                                                    <i class="fas fa-trash"></i>
+                                                </button>
+                                            </td>
+                                        </tr>
+                                    }
+
+                                </table>
+                            </div>
+                        </div>
+                        <div class="card-footer text-right">
+                            @{ Html.RenderPartial("~/Views/Shared/_Pagination.cshtml"); }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+
+<!--modal thêm mới,sửa-->
+<div class="modal fade" role="dialog" id="ModalAddorEditTramQuanTrac">
+    <div class="modal-dialog" role="document" style="height: inherit; ">
+        <div class="modal-content">
+            <div class="modal-body">
+                <div class="card">
+                    <form class="" novalidate="">
+                        <input value="" id="monitorStationId" style="display:none" />
+                        <div class="card-header card-header-modal">
+                            <h4 id="monitorstationmodaltitle"></h4>
+                        </div>
+                        <div class="card-body" style=" margin-left: -40px;">
+                            <div class="form-group">
+                                <label>Tên trạm<b style="color:red">*</b></label>
+                                <input type="text" class="form-control" required="" id="monitorStationName">
+                            </div>
+                            <div class="form-group">
+                                <label>Mã trạm<b style="color:red">*</b></label>
+                                <input type="text" class="form-control" required="" id="monitorStationCode">
+                            </div>
+                            <div class="form-group">
+                                <label>Thuộc đơn vị<b style="color:red">*</b></label>
+                                <select id="selectparentid" style="width:8em" class="" data-placeholder="Chọn đơn vị">
+                                    <option value="" class=""></option>
+                                    @if (ViewBag.CoQuan.Count > 0)
+                                    {
+                                        @foreach (var item in ViewBag.CoQuan)
+                                        {
+                                            @if (item.displaynumber == "l1")
+                                            {
+                                                <option value="@item.id" class="l1 non-leaf">@item.title</option>
+                                            }
+                                            else
+                                            {
+                                                <option value="@item.id" data-pup="@item.parentid" class="@(item.displaynumber)">@item.title</option>
+                                            }
+                                        }
+                                    }
+                                </select>
+                            </div>
+                            <div style="display: flex;">
+                                <div class="form-group">
+                                    <label>Kinh Độ<b style="color:red">*</b></label>
+                                    <input type="number" class="form-control" id="longitude">
+                                </div>
+                                <div class="form-group" style="margin-left:25px">
+                                    <label>Vĩ độ<b style="color:red">*</b></label>
+                                    <input type="number" class="form-control" id="latitude">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label>Địa danh</label>
+                                <input type="text" class="form-control" id="siteAddress">
+                            </div>
+                            <div class="form-group">
+                                <label>Địa chỉ</label>
+                                <input type="text" class="form-control" id="address">
+                            </div>
+                            <div class="form-group">
+                                <label>Mô tả</label>
+                                <input type="text" class="form-control" id="description">
+                            </div>
+                        </div>
+                        <div class="card-footer text-right">
+                            <button class="btn btn-primary" id="btnsavetramquantrac" onclick="">Lưu</button>
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    $("#selectparentid").select2ToTree();
+    monitorStationindex.monitorStationindex_init();
+</script>
+

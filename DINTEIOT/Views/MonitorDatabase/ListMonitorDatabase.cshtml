@@ -1,0 +1,148 @@
+﻿@model List<DINTEIOT.Models.MonitorDatabase.MonitorDatabase>
+@{
+    DINTEIOT.Models.MonitorDatabase.MonitorDatabaseFilter monitorDatabaseFilter = new DINTEIOT.Models.MonitorDatabase.MonitorDatabaseFilter();
+    if (TempData["OptionFilter"] != null)
+    {
+        monitorDatabaseFilter = Newtonsoft.Json.JsonConvert.DeserializeObject<DINTEIOT.Models.MonitorDatabase.MonitorDatabaseFilter>((string)TempData["OptionFilter"]);
+        TempData.Keep();
+    }
+}
+<link href="~/function/monitordatabase/css/index.css" rel="stylesheet" />
+<div class="main-content">
+    <input style="display:none" id="monitorStationID" value="@ViewBag.MonitorID"/>
+    <section class="section">
+        <div class="section-header">
+            <h1>Danh sách số liệu của trạm</h1>
+            <div class="section-header-breadcrumb">
+                <ul class="nav nav-pills active">
+                    <li class="nav-item">
+                        <a data-toggle="modal" data-target="" class="nav-link " href="#" onclick="ShowCreateMonitorDatabase()">
+                            <i class="fas fa-plus" data-placement="bottom"></i> Thêm mới
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="section-body">
+            <div class="row">
+                <div class="col-12 col-md-12 col-lg-12">
+                    <div class="card">
+                        <div class="card-header">
+                            <select class="form-control selectfilter inputfilter" placeholder="Chọn đơn vị" id="OrganIDfilter" style="">
+                                @if (ViewBag.LoaiDuLieu.Count > 0)
+                                {
+                                    <option class="l1 non-leaf" value="0">Tất cả</option>
+                                    @foreach (var item in ViewBag.LoaiDuLieu)
+                                    {
+                                        @if (monitorDatabaseFilter.stationDataID == item.stationDataId)
+                                        {
+                                            <option class="l1 non-leaf" value="@item.stationDataId" selected>@item.stationDataName</option>
+                                        }
+                                        else
+                                        {
+                                            <option class="l1 non-leaf" value="@item.stationDataId">@item.stationDataName</option>
+                                        }
+
+                                    }
+                                }
+                            </select>
+                            <form class="card-header-form">
+                                <input class="form-control search inputfilter" type="search" placeholder="Nhập và nhấn Enter để tìm kiếm" aria-label="Search" data-width="250" style="" id="txtsearch" value="@monitorDatabaseFilter.txtsearch">
+                            </form>
+                        </div>
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table class="table table-bordered table-md" id="tabletram">
+                                    <tr>
+                                        <th>Loại dữ liệu</th>
+                                        <th>Giá trị</th>
+                                        <th>Thời gian</th>
+                                        <th></th>
+                                    </tr>
+                                    @foreach (var item in Model)
+                                    {
+                                        <tr>
+                                            <td>@item.stationDataName</td>
+                                            <td>@item.monitorDatabaseValue</td>
+                                            <td>@item.monitorDatabaseTime</td>
+                                            <td style="text-align:center">
+                                                <button class="btn btn-icon" id="" onclick="ShowEditMonitorStation(@item.monitorDatabaseID)" data-toggle="tooltip" data-placement="bottom" data-original-title="Sửa số liệu">
+                                                    <i class="far fa-edit">
+                                                    </i>
+                                                </button>
+                                                <button data-toggle="tooltip" data-placement="bottom" data-original-title="Xóa trạm quan trắc" href="" class="btn btn-icon" style="margin-left:5px" id="">
+                                                    <i class="fas fa-trash"></i>
+                                                </button>
+                                            </td>
+                                        </tr>
+                                    }
+
+                                </table>
+                            </div>
+                        </div>
+                        <div class="card-footer text-right">
+                            @{ Html.RenderPartial("~/Views/Shared/_Pagination.cshtml"); }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+
+<!--modal thêm mới,sửa-->
+<div class="modal fade" role="dialog" id="ModalSoLieuQuanTrac">
+    <div class="modal-dialog" role="document" style="height: inherit; ">
+        <div class="modal-content">
+            <div class="modal-body">
+                <div class="card">
+                    <form class="" novalidate="">
+                        <input value="" id="monitorDatabaseID" style="display:none" />
+                        <div class="card-header card-header-modal">
+                            <h4 id="monitorDatabasemodaltitle"></h4>
+                        </div>
+                        <div class="card-body" style=" margin-left: -40px;">
+                            <div class="form-group">
+                                <label>Loại dữ liệu<b style="color:red">*</b></label>
+                                <select class="form-control" data-placeholder="Chọn loại dữ liệu" id="stationDataID">
+                                    <option value=""></option>
+                                    @if (ViewBag.LoaiDuLieu.Count > 0)
+                                    {
+                                        @foreach (var item in ViewBag.LoaiDuLieu)
+                                        {
+                                            <option class="l1 non-leaf" value="@item.stationDataId">@item.stationDataName</option>
+                                        }
+                                    }
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>Thời gian<b style="color:red">*</b></label>
+                                <input type="text" class="form-control datepicker" required="" id="monitorDatabaseTime">
+                            </div>
+                            <div style="display: flex;">
+                                <div class="form-group">
+                                    <label>Giá trị<b style="color:red">*</b></label>
+                                    <input type="number" class="form-control" id="monitorDatabaseValue">
+                                </div>
+                                <div class="form-group" style="margin-left:25px">
+                                    <label>Đơn vị</label>
+                                    <input type="text" class="form-control" id="monitorDatabaseUnit">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-footer text-right">
+                            <button class="btn btn-primary" id="btnsavesolieu" onclick="">Lưu</button>
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    $("#stationDataID").select2ToTree();
+    listMonitorDatabaseindex.listMonitorDatabaseindex_init();
+</script>
+

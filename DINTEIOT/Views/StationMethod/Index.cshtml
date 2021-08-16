@@ -1,0 +1,154 @@
+﻿@model List<DINTEIOT.Models.StationMethod.StationMethod>
+@{
+    DINTEIOT.Models.StationMethod.StationMethodFilter stationMethodFilter = new DINTEIOT.Models.StationMethod.StationMethodFilter();
+    if (TempData["OptionFilter"] != null)
+    {
+        stationMethodFilter = Newtonsoft.Json.JsonConvert.DeserializeObject<DINTEIOT.Models.StationMethod.StationMethodFilter>((string)TempData["OptionFilter"]);
+        TempData.Keep();
+    }
+}
+<link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/css/select2.min.css" rel="stylesheet">
+<link href="~/plugin/js/select2-to-tree-master/src/select2totree.css" rel="stylesheet" />
+<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/js/select2.min.js"></script>
+<script src="~/plugin/js/select2-to-tree-master/src/select2totree.js"></script>
+<link href="~/function/stationmethod/css/index.css" rel="stylesheet" />
+<div class="main-content">
+    <section class="section">
+        <div class="section-header">
+            <h1>Phương thức quan trắc</h1>
+            @*<input class="form-control search inputfilter" type="search" placeholder="Nhập và nhấn Enter để tìm kiếm" aria-label="Search" data-width="250" style="" id="txtsearch" value="@OptionFilter.txtsearch">*@
+            <div class="section-header-breadcrumb">
+                <ul class="nav nav-pills active">
+                    <li class="nav-item">
+                        <a data-toggle="modal" data-target="" class="nav-link " href="#" onclick="ShowCreatestationMethod()">
+                            <i class="fas fa-plus" data-placement="bottom"></i> Thêm mới
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="section-body">
+            <div class="row">
+                <div class="col-12 col-md-12 col-lg-12">
+                    <div class="card">
+                        <div class="card-header">
+                            <select class="form-control selectfilter inputfilter" placeholder="" id="stationDataIDfilter" style="">
+                                @if (ViewBag.LoaiDuLieu.Count > 0)
+                                {
+                                    <option class="l1 non-leaf" value="0">Tất cả</option>
+                                    @foreach (var item in ViewBag.LoaiDuLieu)
+                                    {
+                                        @if (stationMethodFilter.stationDataID == item.stationDataId)
+                                        {
+                                            <option class="l1 non-leaf" value="@item.stationDataId" selected>@item.stationDataName</option>
+                                        }
+                                        else
+                                        {
+                                            <option class="l1 non-leaf" value="@item.stationDataId">@item.stationDataName</option>
+                                        }
+
+                                    }
+                                }
+                            </select>
+                            <form class="card-header-form">
+                                <input class="form-control search inputfilter" type="search" placeholder="Nhập và nhấn Enter để tìm kiếm" aria-label="Search" data-width="250" style="" id="txtsearch" value="@stationMethodFilter.txtsearch">
+                            </form>
+
+                        </div>
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table class="table table-bordered table-md">
+                                    <tr>
+                                        <th>Tên phương thức</th>
+                                        <th>Mã phương thức</th>
+                                        <th>Loại dữ liệu</th>
+                                        <th></th>
+                                    </tr>
+                                    @foreach (var item in Model)
+                                    {
+                                        <tr>
+                                            <td>@item.stationMethodName</td>
+                                            <td>@item.stationMethodCode</td>
+                                            <td>@item.stationDataName</td>
+                                            <td style="text-align:center">
+                                                <button class="btn btn-icon" id="" onclick="ShowStationMethod(@item.stationMethodID)" data-toggle="tooltip" data-placement="bottom" data-original-title="Xem phương thức">
+                                                    <i class="far fa-eye"></i>
+                                                </button>
+                                                <button class="btn btn-icon" id="" onclick="ShowEditstationMethod(@item.stationMethodID)" data-toggle="tooltip" data-placement="bottom" data-original-title="Sửa phương thức">
+                                                    <i class="far fa-edit">
+                                                    </i>
+                                                </button>
+                                                <button data-toggle="tooltip" data-placement="bottom" data-original-title="Xóa phương thức" href="" class="btn btn-icon" style="margin-left:5px" id="">
+                                                    <i class="fas fa-trash"></i>
+                                                </button>
+                                            </td>
+                                        </tr>
+                                    }
+
+                                </table>
+                            </div>
+                        </div>
+                        <div class="card-footer text-right">
+                            @{ Html.RenderPartial("~/Views/Shared/_Pagination.cshtml"); }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+
+<!--modal thêm mới,sửa-->
+<div class="modal fade" role="dialog" id="ModalAddorEditPTQuanTrac">
+    <div class="modal-dialog" role="document" style="height: inherit; ">
+        <div class="modal-content">
+            <div class="modal-body">
+                <div class="card">
+                    <form class="" novalidate="">
+                        <input value="" id="stationMethodID" style="display:none" />
+                        <div class="card-header card-header-modal">
+                            <h4 id="stationMethodmodaltitle"></h4>
+                        </div>
+                        <div class="card-body" style=" margin-left: -40px;">
+                            <div class="form-group">
+                                <label>Tên phương thức<b style="color:red">*</b></label>
+                                <input type="text" class="form-control" required="" id="stationMethodName">
+                            </div>
+                            <div class="form-group">
+                                <label>Mã phương thức<b style="color:red">*</b></label>
+                                <input type="text" class="form-control" required="" id="stationMethodCode">
+                            </div>
+                            <div class="form-group">
+                                <label>Loại dữ liệu<b style="color:red">*</b></label>
+                                <select class="form-control" data-placeholder="Chọn loại dữ liệu" id="stationDataID">
+                                    <option value=""></option>
+                                    @if (ViewBag.LoaiDuLieu.Count > 0)
+                                    {
+                                        @foreach (var item in ViewBag.LoaiDuLieu)
+                                        {
+                                            <option class="l1 non-leaf" value="@item.stationDataId">@item.stationDataName</option>
+                                        }
+                                    }
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>Mô tả</label>
+                                <input type="text" class="form-control" id="description">
+                            </div>
+                        </div>
+                        <div class="card-footer text-right">
+                            <button class="btn btn-primary" id="btnsavetramquantrac" onclick="">Lưu</button>
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    $("#stationDataID").select2ToTree();
+    stationMethodindex.stationMethodindex_init();
+</script>
+

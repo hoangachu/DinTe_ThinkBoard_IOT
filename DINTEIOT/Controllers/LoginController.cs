@@ -66,7 +66,7 @@ namespace DINTEIOT.Controllers
                                 IsPersistent = account.rememberme,
                                 ExpiresUtc = DateTime.UtcNow.AddMinutes(4320)
                             });
-            return Redirect("/home/index");
+            return Redirect("/login/AuthorCapCha");
             //return Ok(new { data = 1, url = "/admin/home/index" });
         }
         public Account ValidateUser(Account accounts)
@@ -107,6 +107,10 @@ namespace DINTEIOT.Controllers
             }
 
             return account;
+        }
+        public IActionResult AuthorCapCha()
+        {
+            return View();
         }
     }
 }

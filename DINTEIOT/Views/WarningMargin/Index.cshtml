@@ -1,0 +1,158 @@
+﻿@model List<DINTEIOT.Models.WarningMargin.WarningMargin>
+@{
+    DINTEIOT.Models.WarningMargin.WarningMarginFilter WarningMarginFilter = new DINTEIOT.Models.WarningMargin.WarningMarginFilter();
+    if (TempData["OptionFilter"] != null)
+    {
+        WarningMarginFilter = Newtonsoft.Json.JsonConvert.DeserializeObject<DINTEIOT.Models.WarningMargin.WarningMarginFilter>((string)TempData["OptionFilter"]);
+        TempData.Keep();
+    }
+}
+<link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/css/select2.min.css" rel="stylesheet">
+<link href="~/plugin/js/select2-to-tree-master/src/select2totree.css" rel="stylesheet" />
+<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/js/select2.min.js"></script>
+<script src="~/plugin/js/select2-to-tree-master/src/select2totree.js"></script>
+<link href="~/function/warningmargin/css/index.css" rel="stylesheet" />
+<div class="main-content">
+    <section class="section">
+        <div class="section-header">
+            <h1>Ngưỡng cảnh báo</h1>
+            @*<input class="form-control search inputfilter" type="search" placeholder="Nhập và nhấn Enter để tìm kiếm" aria-label="Search" data-width="250" style="" id="txtsearch" value="@OptionFilter.txtsearch">*@
+            <div class="section-header-breadcrumb">
+                <ul class="nav nav-pills active">
+                    <li class="nav-item">
+                        <a data-toggle="modal" data-target="" class="nav-link " href="#" onclick="ShowCreateWarningMargin()">
+                            <i class="fas fa-plus" data-placement="bottom"></i> Thêm mới
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="section-body">
+            <div class="row">
+                <div class="col-12 col-md-12 col-lg-12">
+                    <div class="card">
+                        <div class="card-header">
+                            <select class="form-control selectfilter inputfilter" placeholder="Chọn loại dữ liệu" id="stationDataIDfilter" style="">
+                                @if (ViewBag.LoaiDuLieu.Count > 0)
+                                {
+                                    <option class="l1 non-leaf" value="0">Tất cả</option>
+                                    @foreach (var item in ViewBag.LoaiDuLieu)
+                                    {
+                                        @if (WarningMarginFilter.stationDataID == item.stationDataId)
+                                        {
+                                            <option class="l1 non-leaf" value="@item.stationDataId" selected>@item.stationDataName</option>
+                                        }
+                                        else
+                                        {
+                                            <option class="l1 non-leaf" value="@item.stationDataId">@item.stationDataName</option>
+                                        }
+
+                                    }
+                                }
+                            </select>
+                            <form class="card-header-form">
+                                <input class="form-control search inputfilter" type="search" placeholder="Nhập và nhấn Enter để tìm kiếm" aria-label="Search" data-width="250" style="" id="txtsearch" value="@WarningMarginFilter.txtsearch">
+                            </form>
+                            
+                        </div>
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table class="table table-bordered table-md">
+                                    <tr>
+                                        <th>Tên ngưỡng cảnh báo</th>
+                                        <th>Giá trị</th>
+                                        <th></th>
+                                    </tr>
+                                    @foreach (var item in Model)
+                                    {
+                                        <tr>
+                                            <td>@item.warningMarginName</td>
+                                            <td style="color: @item.warningMarginValueColor">@item.warningMarginValueFrom - @item.warningMarginValueTo (@item.warningMarginValueUnit)</td>
+                                            <td style="text-align:center">
+                                                <button class="btn btn-icon" id="" onclick="ShowEditWarningMargin(@item.warningMarginID)" data-toggle="tooltip" data-placement="bottom" data-original-title="Sửa ngưỡng cảnh báo">
+                                                    <i class="far fa-edit">
+                                                    </i>
+                                                </button>
+                                                <button data-toggle="tooltip" data-placement="bottom" data-original-title="Xóa loại dữ liệu" href="" class="btn btn-icon" style="margin-left:5px" id="">
+                                                    <i class="fas fa-trash"></i>
+                                                </button>
+                                            </td>
+                                        </tr>
+                                    }
+
+                                </table>
+                            </div>
+                        </div>
+                        <div class="card-footer text-right">
+                            @{ Html.RenderPartial("~/Views/Shared/_Pagination.cshtml"); }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+
+<!--modal thêm mới,sửa-->
+<div class="modal fade" role="dialog" id="ModalAddorEditNguongCanhBao">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-body">
+                <div class="card">
+                    <form class="" novalidate="">
+                        <input value="" id="warningMarginId" style="display:none" />
+                        <div class="card-header card-header-modal">
+                            <h4 id="warningmarginmodaltitle"></h4>
+                        </div>
+                        <div class="card-body" style=" margin-left: -40px;">
+                            <div class="form-group">
+                                <label>Tên ngưỡng<b style="color:red">*</b></label>
+                                <input type="text" class="form-control" required="" id="warningMarginName">
+                            </div>
+
+                            <div class="form-group">
+                                <label>Loại dữ liệu<b style="color:red">*</b></label>
+                                <select class="form-control" data-placeholder="Chọn loại dữ liệu" id="stationDataID">
+                                    <option value=""></option>
+                                    @if (ViewBag.LoaiDuLieu.Count > 0)
+                                    {
+                                        @foreach (var item in ViewBag.LoaiDuLieu)
+                                        {
+                                            <option class="l1 non-leaf" value="@item.stationDataId">@item.stationDataName</option>
+                                        }
+                                    }
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>Màu sắc<b style="color:red">*</b></label>
+                                <input type="color" class="form-control" id="warningMarginValueColor">
+                            </div>
+                            <div class="form-group">
+                                <label>Từ giá trị<b style="color:red">*</b></label>
+                                <input type="number" class="form-control" id="warningMarginValueFrom">
+                            </div>
+                            <div class="form-group">
+                                <label>Đến giá trị<b style="color:red">*</b></label>
+                                <input type="number" class="form-control" id="warningMarginValueTo">
+                            </div>
+                            <div class="form-group">
+                                <label>Đơn vị ngưỡng</label>
+                                <input type="text" class="form-control" id="warningMarginValueUnit">
+                            </div>
+                        </div>
+                        <div class="card-footer text-right">
+                            <button class="btn btn-primary" id="btnsavenguongcanhbao" onclick="">Lưu</button>
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    $("#stationDataID").select2ToTree();
+    warningMarginindex.warningMarginindex_init();
+</script>
+
