@@ -34,3 +34,9 @@
 .modal-content{
     height:0%
 }
+.select2-search__field{
+    width:100% !important
+}
+.select2-selection__choice {
+    color: maroon !important
+}

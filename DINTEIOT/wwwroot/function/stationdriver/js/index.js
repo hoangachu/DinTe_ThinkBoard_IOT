@@ -144,7 +144,7 @@ function checkstationDriverbyCode(stationDriverCode, id) {
     return check;
 }
 //check tên trạm đã tồn tại chưa
-function checkdatastationbycode(stationDriverCode, id) {
+function checkstationDriverbycode(stationDriverCode, id) {
     var check;
     $.ajax({
         url: "/stationDriver/CheckstationDriverByCode",

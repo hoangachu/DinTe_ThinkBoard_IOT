@@ -28,7 +28,6 @@
 
     <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/css/select2.min.css" rel="stylesheet">
     <!--ggchart-->
-    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
     <!---->
   
 </head>
@@ -44,7 +43,7 @@
                     </ul>
                 </form>
                 <ul class="navbar-nav navbar-right">
-                    <li class="dropdown dropdown-list-toggle">
+                    <!--<li class="dropdown dropdown-list-toggle">
                         <a href="#" data-toggle="dropdown" class="nav-link nav-link-lg message-toggle beep"><i class="far fa-envelope"></i></a>
                         <div class="dropdown-menu dropdown-list dropdown-menu-right">
                             <div class="dropdown-header">
@@ -55,9 +54,9 @@
                             </div>
                             <div class="dropdown-list-content dropdown-list-message">
                                 <a href="#" class="dropdown-item dropdown-item-unread">
-                                    <div class="dropdown-item-avatar">
+                                    <div class="dropdown-item-avatar">-->
                                         @*<img alt="image" src="~/plugin/img/avatar/avatar-1.png" class="rounded-circle">*@
-                                        <lord-icon src="https://cdn.lordicon.com/dxjqoygy.json"
+                                        <!--<lord-icon src="https://cdn.lordicon.com/dxjqoygy.json"
                                                    trigger="loop"
                                                    colors="primary:#e8e230,secondary:#a866ee"
                                                    style="width:50px;height:50px">
@@ -136,7 +135,7 @@
                                 <a href="#">View All <i class="fas fa-chevron-right"></i></a>
                             </div>
                         </div>
-                    </li>
+                    </li>-->
                     <li class="dropdown">
                         <a href="#" data-toggle="dropdown" class="nav-link dropdown-toggle nav-link-lg nav-link-user">
                             <img src="~/images/avatar18.gif" class="rounded-circle mr-1" />
@@ -161,7 +160,7 @@
             <div class="main-sidebar">
                 <aside id="sidebar-wrapper">
                     <div class="sidebar-brand">
-                        <a href="index.html">ThinkBoard</a>
+                        <a href="index.html"></a>
                         <img src="~/images/tomahok_v2.gif" style="width: 50px; height: 85px;" />
                     </div>
                     <div class="sidebar-brand sidebar-brand-sm">
@@ -169,7 +168,7 @@
                     </div>
                     <ul class="sidebar-menu" style=" margin-top: 35px;">
                         <li class="menu-header"> </li>
-                        <li><a href="#" class="nav-link"><i class="fas fa-fire"></i><span>Dashboard</span></a></li>
+                        <li><a href="/home" class="nav-link"><i class="fas fa-fire"></i><span>Dashboard</span></a></li>
                         <li><a href="/monitordatabase" class="nav-link"><i class="fas fa-database" style="color:brown"></i><span>Số liệu quan trắc</span></a></li>
                         <li><a class="nav-link" href="/monitorstation"><i class="fas fa-map-marker-alt" style="color: darkgreen"></i> <span>Trạm quan trắc</span></a></li>
                         <li><a href="/stationdriver" class="nav-link "><i class="fas fa-tractor" style="color: #0b81ff"></i> <span>Phương tiện quan trắc</span></a></li>
@@ -179,16 +178,8 @@
                         <li><a href="#" class="nav-link"><i class="fas fa-dice-d6" style="color: #1a3958"></i><span>Vai trò người dùng</span></a></li>
                         <li><a href="/StationData" class="nav-link"><i class="fas fa-compress-arrows-alt" style="color:brown"></i><span>Loại dữ liệu quan trắc</span></a></li>
                         <li><a href="/warningmargin" class="nav-link"><i class="fas fa-exclamation-triangle" style="color: #f31d1d"></i><span>Ngưỡng cảnh báo</span></a></li>
-                        <li class="nav-item dropdown">
-                            <a href="#" class="nav-link has-dropdown" data-toggle="dropdown"><i class="fas fa-columns" style="color: #0ebd4c"></i> <span>Xem thông tin số liệu quan trắc</span></a>
-                            <ul class="dropdown-menu">
-                                <li><a class="nav-link" href="/waterchart">Biểu đồ mực nước</a></li>
-                                <li><a class="nav-link" href="layout-transparent.html">Biểu đồ tốc độ dòng chảy</a></li>
-                                <li><a class="nav-link" href="layout-top-navigation.html">Biểu đồ nồng độ PH</a></li>
-                                <li><a class="nav-link" href="layout-top-navigation.html">Biểu đồ nồng độ Oxygen-DO</a></li>
-                                <li><a class="nav-link" href="layout-top-navigation.html">Biểu đồ nồng độ Asen</a></li>
-                            </ul>
-                        </li>
+                        <li><a href="/chartinfo" class="nav-link"><i class="fas fa-columns" style="color: #0ebd4c"></i><span>Xem thông tin số liệu quan trắc từng trạm</span></a></li>
+                        <li><a href="/chartinfo/multistation" class="nav-link"><i class="fas fa-boxes"></i><span>Xem thông tin số liệu quan trắc nhiều trạm</span></a></li>
                     </ul>
                 </aside>
             </div>

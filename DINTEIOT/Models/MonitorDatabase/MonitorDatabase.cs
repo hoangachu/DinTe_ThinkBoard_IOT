@@ -16,6 +16,9 @@ namespace DINTEIOT.Models.MonitorDatabase
         public string stationDataName { get; set; }
         public int monitorStationID { get; set; }
         public int totalrecord { get; set; }
+        public string monitorStationName { get; set; }
+        public int hour { get; set; }
+        public int minutes { get; set; }
     }
     public class MonitorDatabaseFilter : OptionFilter
     {

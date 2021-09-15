@@ -5,7 +5,7 @@ var captcha = sliderCaptcha({
     onSuccess: function () {
         var handler = setTimeout(function () {
             window.clearTimeout(handler);
-            window.location.replace("/home");
+            window.location.replace("/login/LoginAfter");
         }, 500);
     }
 });

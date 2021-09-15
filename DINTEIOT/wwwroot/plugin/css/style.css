@@ -64,7 +64,10 @@
     height: 40px !important;
     margin-top: auto;
 }
-.select2  >span >span{
+.highcharts-credits{
+    display:none
+}
+.select2 > span > span {
     padding-top: 5px !important;
 }
 .card-header-form {
@@ -2056,7 +2059,7 @@ a.bb {
 .gradient-bottom {
   position: relative; }
   .gradient-bottom:after {
-    content: ' ';
+ /*   content: ' ';*/
     position: absolute;
     bottom: 41px;
     left: 0;

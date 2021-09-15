@@ -1,10 +1,13 @@
 ﻿using DINTEIOT.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Net.Http;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace DINTEIOT.Controllers
@@ -20,6 +23,7 @@ namespace DINTEIOT.Controllers
 
         public IActionResult Index()
         {
+            
             return View();
         }
 
@@ -33,5 +37,7 @@ namespace DINTEIOT.Controllers
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
+
+        
     }
 }

@@ -1,0 +1,240 @@
+﻿@{
+    DINTEIOT.Models.ChartInfo.ChartInfoFilter chartInfoFilter = new DINTEIOT.Models.ChartInfo.ChartInfoFilter();
+    if (TempData["ChartInfoFilter"] != null)
+    {
+        chartInfoFilter = Newtonsoft.Json.JsonConvert.DeserializeObject<DINTEIOT.Models.ChartInfo.ChartInfoFilter>((string)TempData["ChartInfoFilter"]);
+        TempData.Keep();
+    }
+    string[] listkey = ViewBag.Liststationdata as string[];
+
+    //if (ViewBag.Liststationdata != null)
+    //{
+    //    listkey = ViewBag.Liststationdata as string[]; ;
+    //}
+}
+<link href="~/function/chartinfo/css/index.css" rel="stylesheet" />
+<link href="https://cdn.datatables.net/1.11.1/css/jquery.dataTables.min.css" />
+<script src="https://cdn.datatables.net/1.11.1/js/jquery.dataTables.min.js"></script>
+<div class="main-content" id="main-content">
+    <section class="section">
+        <div class="section-header headertilte">
+            <h1>Thông tin số liệu theo từng trạm</h1>
+        </div>
+        <div class="section-header headertilte">
+            <p style="display: contents; justify-content: center; font-weight: 700;">Chọn trạm</p>
+            <select class="form-control selectfilter inputfilterv1" placeholder="" id="MonitorStationfilter" style="margin-left:10px;margin-right:10px" onchange="CheckSelected()">
+                @if (ViewBag.TramQuanTrac.Count > 0)
+                {
+                    <option class="" value="0">Tất cả</option>
+                    @foreach (var item in ViewBag.TramQuanTrac)
+                    {
+                        if (item.type == 1)
+                        {
+                            @if (chartInfoFilter.monitorStationID == item.monitorStationID)
+                            {
+                                <option class="" value="@item.monitorStationID" data-type="@item.type" selected>@item.monitorStationName</option>
+                            }
+                            else
+                            {
+                                <option class="" value="@item.monitorStationID" data-type="@item.type">@item.monitorStationName</option>
+                            }
+
+                        }
+                        else
+                        {
+                            @if (chartInfoFilter.GuiID == item.GuiID)
+                            {
+                                <option class="" value="@item.GuiID" data-type="@item.type" selected>@item.monitorStationName</option>
+                            }
+                            else
+                            {
+                                <option class="" value="@item.GuiID" data-type="@item.type">@item.monitorStationName</option>
+                            }
+
+                        }
+
+                    }
+                }
+            </select>
+            <p style="display: contents; justify-content: center; margin-left: 10px; font-weight: 700; ">Chọn thông số</p>
+            <div id="ChartTypediv" style="display: contents;">
+                <select class="form-control selectfilter inputfilterv1" placeholder="Chọn loại biểu đồ" id="ChartType" style="margin-left:10px" @*onchange="CheckSelectLoaiBieuDo()"*@ multiple>
+                </select>
+            </div>
+         
+            <select class="form-control selectfilter inputfilterv1" placeholder="Chọn đơn vị" id="TimeDurationSelect" style="margin-left: 10px" @*onchange="GetListDBByDatePre();"*@>
+                <option value="1">1 tuần</option>
+                <option value="2">1 tháng</option>
+                <option value="3">3 tháng</option>
+            </select>
+            <a href="#" class="btn btn-primary" style="margin-left: 10px" onclick="GetData()">Lấy dữ liệu</a>
+            <div class="section-header-breadcrumb">
+                <div class="breadcrumb-item active">
+                    <ul class="nav nav-pills active">
+                        <li class="nav-item">
+                            <a data-toggle="modal" data-target="" class="nav-link " href="#" onclick="CreateTemplate()">
+                                <i class="fas fa-plus" data-placement="bottom"></i> Publish
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+
+            </div>
+
+
+        </div>
+        <div class="row" id="template">
+            <div class="col-lg-5">
+                <div class="card carddefault" id="listchart">
+                    <div class="card-body">
+                        <i>Không có dữ liệu</i>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-body">
+                        <div class="section-body">
+                            <div class="row">
+                                <div class="col-12 col-md-12 col-lg-12">
+                                    <div class="card">
+                                        <div class="card-header card-header-modal">
+                                            <h4>
+                                                Số liệu mới nhất
+                                            </h4>
+                                        </div>
+                                        <div class="card-body">
+                                            <div class="table-responsive">
+                                                <table class="table table-bordered table-md" id="tabledl">
+                                                    <tr>
+                                                        <th>Số liệu</th>
+                                                        <th>Giá trị</th>
+                                                        <th>Đơn vị</th>
+                                                        <th>Thời gian</th>
+                                                    </tr>
+                                                    <tbody id="tbodylastdata">
+                                                    </tbody>
+
+                                                </table>
+                                            </div>
+                                        </div>
+                                        <div class="card-footer text-right">
+                                            @{ Html.RenderPartial("~/Views/Shared/_Pagination.cshtml"); }
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-7">
+                <div class="card">
+                    <div class="card-header card-header-modal">
+                        <h4>
+                            Trạm quan trắc
+                        </h4>
+                    </div>
+                    <div class="card-body">
+                        <div id="map" style=""></div>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-body">
+                        <div class="section-body">
+                            <div class="row">
+                                <div class="col-12 col-md-12 col-lg-12">
+                                    <div class="card">
+                                        <div class="card-header card-header-form">
+                                            <h4>Chọn số liệu</h4>
+                                            <select class="form-control selectfilter inputfilterv1" placeholder="Chọn loại biểu đồ" id="ChartTypev1" style="margin-left:10px" onchange="GetDataTableFilter()">
+                                            </select>
+                                        </div>
+                                        <div class="card-body">
+                                            <div class="table-responsive">
+                                                <table class="table table-bordered table-md" id="tabledlByKey">
+                                                    <tr>
+                                                        <th>Thời gian</th>
+                                                        <th>Loại dữ liệu</th>
+                                                        <th>Giá trị</th>
+                                                    </tr>
+                                                    <tr id="trdefault">
+                                                        <td colspan="3">Không có dữ liệu</td>
+                                                    </tr>
+                                                    <tbody id="tbody">
+                                                    </tbody>
+
+                                                </table>
+                                            </div>
+                                        </div>
+                                        <div class="card-footer text-right">
+                                            <nav class="d-inline-block" id="pagination">
+                                                <input id="pagenumberbykey" value="@ViewBag.pagenumberbykey" style="display:none" />
+                                                <input id="pagefirstbykey" value="@ViewBag.pagefirstbykey" style="display:none" />
+                                                <input id="currentpagenamebykey" value="@ViewBag.currentpagenamebykey" style="display:none" />
+                                                <ul class="pagination mb-0">
+                                                    @if (ViewBag.totalpagebykey > 1)
+                                                    {
+                                                        <li class="page-item disabled previouspagination">
+                                                            <a class="page-link" href="#" tabindex="-1"><i class="fas fa-chevron-left"></i></a>
+                                                        </li>
+                                                        @if (ViewBag.pagenumberbykey == 1)
+                                                        {
+                                                            <li class="page-item active page" data-li="1"><a class="page-link" href="#">1 <span class="sr-only">(current)</span></a></li>
+                                                        }
+                                                        else
+                                                        {
+                                                            <li class="page-item  page" data-li="1"><a class="page-link" href="#">1 <span class="sr-only">(current)</span></a></li>
+                                                        }
+
+                                                        for (var i = 2; i <= (ViewBag.totalpagebykey <= 2 ? 2 : ViewBag.totalpagebykey); i++)
+                                                        {
+                                                            @if (ViewBag.Pagenumberbykey == i)
+                                                            {
+                                                                <li class="page-item page active" data-li="@i"><a class="page-link" href="#">@i</a> </li>
+                                                            }
+                                                            else
+                                                            {
+                                                                <li class="page-item page" data-li="@i"><a class="page-link" href="#">@i</a> </li>
+                                                            }
+
+                                                        }
+                                                        <li class="page-item nextpagination">
+                                                            <a class="page-link" href="#"><i class="fas fa-chevron-right"></i></a>
+                                                        </li>
+                                                    }
+                                                    else
+                                                    {
+                                                        <li class="page-item disabled">
+                                                            <a class="page-link" href="#" tabindex="-1"><i class="fas fa-chevron-left"></i></a>
+                                                        </li>
+                                                        <li class="page-item active"><a class="page-link" href="#">1 <span class="sr-only">(current)</span></a></li>
+                                                        <li class="page-item disabled">
+                                                            <a class="page-link" href="#"><i class="fas fa-chevron-right"></i></a>
+                                                        </li>
+                                                    }
+                                                </ul>
+                                            </nav>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </section>
+    <script type="text/javascript">
+        $("#ChartType").select2ToTree();
+        $("#ChartTypev1").select2ToTree();
+        liststationdataid = [];
+        if (@Html.Raw(ViewBag.Liststationdata) != null) {
+             liststationdataid = @Html.Raw(ViewBag.Liststationdata);
+        }
+        chartinfoindex.chartinfoindex_init();
+    </script>
+</div>
+
+
+
+

@@ -15,6 +15,9 @@ namespace DINTEIOT.Controllers
     public interface IStationDataController
     {
         public List<StationData> GetAllListStationData();
+        public List<StationData> GetStationDataByMonitorStationID(int id = 0);
+        public StationData GetStationDataByID(int id = 0);
+        
     }
     public class StationDataController : BaseController, IStationDataController  // Loại dữ liệu quan trắc
     {
@@ -93,6 +96,7 @@ namespace DINTEIOT.Controllers
                                 StationData.stationDataId = dr.IsDBNull("stationDataId") == true ? 0 : (int)dr["stationDataId"];
                                 StationData.stationDataName = dr.IsDBNull("stationDataName") == true ? null : (string)dr["stationDataName"];
                                 StationData.stationDataCode = dr.IsDBNull("stationDataCode") == true ? null : (string)dr["stationDataCode"];
+                                StationData.type = dr.IsDBNull("type") == true ? 0 : (int)dr["type"];
                                 listDataStation.Add(StationData);
 
                             }
@@ -150,7 +154,7 @@ namespace DINTEIOT.Controllers
                             {
 
                                 stationData.stationDataId = dr.IsDBNull("stationDataId") == true ? 0 : (int)dr["stationDataId"];
-                                stationData.stationDataName = dr.IsDBNull("stationDataName") == true ? null : (string)dr["stationDataName"];
+                                stationData.stationDataName = dr.IsDBNull("stationDataName") == true ? "" : (string)dr["stationDataName"];
                                 stationData.stationDataCode = dr.IsDBNull("stationDataCode") == true ? null : (string)dr["stationDataCode"];
 
                                 break;
@@ -224,6 +228,7 @@ namespace DINTEIOT.Controllers
 
                         cmd.Parameters.Add("@stationDataName", SqlDbType.NVarChar).Value = stationData.stationDataName == null ? DBNull.Value : stationData.stationDataName;
                         cmd.Parameters.Add("@stationDataCode", SqlDbType.VarChar).Value = stationData.stationDataCode == null ? DBNull.Value : stationData.stationDataCode;
+                        cmd.Parameters.Add("@type", SqlDbType.VarChar).Value = stationData.type == 0 ? DBNull.Value : stationData.type;
                         cmd.Parameters.Add("@stationDataID", SqlDbType.Int).Direction = ParameterDirection.Output;
                         con.Open();
                         i = cmd.ExecuteNonQuery();
@@ -251,6 +256,7 @@ namespace DINTEIOT.Controllers
                         cmd.Parameters.Add("@stationDataName", SqlDbType.NVarChar).Value = stationData.stationDataName == null ? DBNull.Value : stationData.stationDataName;
                         cmd.Parameters.Add("@stationDataCode", SqlDbType.VarChar).Value = stationData.stationDataCode == null ? DBNull.Value : stationData.stationDataCode;
                         cmd.Parameters.Add("@stationDataID", SqlDbType.VarChar).Value = stationData.stationDataId == 0 ? DBNull.Value : stationData.stationDataId;
+                        cmd.Parameters.Add("@type", SqlDbType.VarChar).Value = stationData.type == 0 ? DBNull.Value : stationData.type;
                         con.Open();
                         i = cmd.ExecuteNonQuery();
 
@@ -281,6 +287,96 @@ namespace DINTEIOT.Controllers
         public void GetListAfterFilter(StationDataFilter stationDataFilter)  //hàm gọi khi nhấn trong phần trang,lọc,...
         {
             TempData["OptionFilter"] = JsonConvert.SerializeObject(stationDataFilter);
+        }
+
+        public List<StationData> GetStationDataByMonitorStationID(int id = 0) // lấy ds loại dl quan trắc by trạm
+        {
+            List<StationData> listStationData = new List<StationData>();
+            using (SqlConnection con = new SqlConnection(Startup.connectionString))
+            {
+                using (SqlCommand cmd = new SqlCommand("GetStationDataByMonitorStationID", con))
+                {
+                    {
+                        try
+                        {
+                            con.Open();
+                            cmd.CommandType = CommandType.StoredProcedure;
+                            cmd.Parameters.Add("@id", SqlDbType.Int).Value = id;
+                            SqlDataReader dr = cmd.ExecuteReader();
+
+                            while (dr.Read())
+                            {
+                                StationData StationData = new StationData();
+                                StationData.stationDataId = dr.IsDBNull("stationDataId") == true ? 0 : (int)dr["stationDataId"];
+                                StationData.stationDataName = dr.IsDBNull("stationDataName") == true ? "" : (string)dr["stationDataName"];
+                                listStationData.Add(StationData);
+                            }
+                            cmd.Dispose();
+                            dr.Close();
+                        }
+                        catch (Exception e)
+                        {
+                            //throw e;
+                        }
+
+                        con.Close();
+                    }
+                }
+            }
+            return listStationData;
+        }
+
+        public IActionResult Delete(int id, int type = 0)
+        {
+            try
+            {
+                using (SqlConnection con = new SqlConnection(Startup.connectionString))
+                {
+
+                    using (SqlCommand cmd = new SqlCommand("Delete_StationData_v1", con))
+                    {
+                        cmd.CommandType = System.Data.CommandType.StoredProcedure;
+
+                        cmd.Parameters.Add("@id       ", SqlDbType.VarChar).Value = id == 0 ? DBNull.Value : id;
+                        cmd.Parameters.Add("@type", SqlDbType.Int).Value = type;
+                        con.Open();
+                        cmd.ExecuteNonQuery();
+
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                //return Ok(new { status = (int)ExitCodes.Error, data = i, message = e.Message });
+            }
+
+            return Ok(new { status = (int)ExitCodes.Success, data = "", message = "Xóa thành công" });
+        }
+        public IActionResult DeleteStationdata_MonitorStation()
+        {
+            try
+            {
+                using (SqlConnection con = new SqlConnection(Startup.connectionString))
+                {
+
+                    using (SqlCommand cmd = new SqlCommand("DeleteStationdata_MonitorStation_v1", con))
+                    {
+                        cmd.CommandType = System.Data.CommandType.StoredProcedure;
+
+                        //cmd.Parameters.Add("@id       ", SqlDbType.VarChar).Value = id == 0 ? DBNull.Value : id;
+                        //cmd.Parameters.Add("@type", SqlDbType.Int).Value = type;
+                        con.Open();
+                        cmd.ExecuteNonQuery();
+
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                //return Ok(new { status = (int)ExitCodes.Error, data = i, message = e.Message });
+            }
+
+            return Ok(new { status = (int)ExitCodes.Success, data = "", message = "Xóa thành công" });
         }
     }
 }

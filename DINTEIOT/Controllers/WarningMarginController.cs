@@ -12,7 +12,11 @@ using WebApi.Helpers;
 
 namespace DINTEIOT.Controllers
 {
-    public class WarningMarginController : BaseController
+    public interface IWarningMarginController
+    {
+        public List<WarningMargin> GetWarningMarginByStationDataID(int id = 0);
+    }
+    public class WarningMarginController : BaseController, IWarningMarginController
     {
         private IStationDataController _istationDataController;
         public WarningMarginController(IStationDataController IStationDataController)
@@ -308,6 +312,47 @@ namespace DINTEIOT.Controllers
                 }
             }
             return warningMargin;
+        }
+
+        public List<WarningMargin> GetWarningMarginByStationDataID(int id = 0)
+        {
+            List<WarningMargin> listwarningMargin = new List<WarningMargin>();
+            using (SqlConnection con = new SqlConnection(Startup.connectionString))
+            {
+                using (SqlCommand cmd = new SqlCommand("WarningMargin_GetWarningMarginByStationData_v1", con))
+                {
+                    {
+                        try
+                        {
+                            con.Open();
+                            cmd.CommandType = CommandType.StoredProcedure;
+                            cmd.Parameters.Add("@id", SqlDbType.Int).Value = id;
+                            SqlDataReader dr = cmd.ExecuteReader();
+
+                            while (dr.Read())
+                            {
+                                WarningMargin warningMargin = new WarningMargin();
+                                warningMargin.warningMarginID = dr.IsDBNull("WarningMarginId") == true ? 0 : (int)dr["WarningMarginId"];
+                                warningMargin.warningMarginName = dr.IsDBNull("WarningMarginName") == true ? null : (string)dr["WarningMarginName"];
+                                warningMargin.warningMarginValueFrom = dr.IsDBNull("warningMarginValueFrom") == true ? 0 : (int)dr["warningMarginValueFrom"];
+                                warningMargin.warningMarginValueTo = dr.IsDBNull("warningMarginValueTo") == true ? 0 : (int)dr["warningMarginValueTo"];
+                                warningMargin.warningMarginValueUnit = dr.IsDBNull("warningMarginValueUnit") == true ? null : (string)dr["warningMarginValueUnit"];
+                                warningMargin.warningMarginValueColor = dr.IsDBNull("warningMarginValueColor") == true ? null : (string)dr["warningMarginValueColor"];
+                                listwarningMargin.Add(warningMargin);
+                            }
+                            cmd.Dispose();
+                            dr.Close();
+                        }
+                        catch (Exception e)
+                        {
+                            //throw e;
+                        }
+
+                        con.Close();
+                    }
+                }
+            }
+            return listwarningMargin;
         }
     }
 }

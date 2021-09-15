@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -24,7 +25,7 @@ namespace DINTEIOT.Controllers
             return View();
         }
         [HttpPost]
-        public async Task<IActionResult> Login(Account account)
+        public IActionResult Login(Account account)
         {
             if (string.IsNullOrEmpty(account.username) || string.IsNullOrEmpty(account.password))
             {
@@ -38,20 +39,26 @@ namespace DINTEIOT.Controllers
                 TempData["IsAlertLoginFail"] = true;
                 return Redirect("/login");
             }
-            //var listauthorizebyrole = _iauthorizeController.GetListAuthorizeByRole(uservalidate.roleid);
+            TempData["account"] = JsonConvert.SerializeObject(uservalidate);
+            return Redirect("/login/AuthorCapCha");
+        }
+        //public ActionResult LoginAfter()
+        //{
+        //    //Login_After();
+        //    return Redirect("/login/Login_After");
+        //}
+        public async Task<IActionResult> LoginAfter()
+        {
+            var account = new Account();
+            if (TempData["account"] != null) { account = JsonConvert.DeserializeObject<Account>((string)TempData["account"]); TempData.Keep(); }
             var claims = new List<Claim>
             {
                             new Claim(ClaimTypes.Name, account.username),
-                            new Claim(ClaimTypes.Role, uservalidate.roleid.ToString())
+                            new Claim(ClaimTypes.Role, account.roleid.ToString())
                             //new Claim("Email", uservalidate.email)
                             //new Claim("UserID", user.userId.ToString()),
                             //new Claim("RoleID", uservalidate.roleid.ToString()),
                             //new Claim(AuthorizeCode.THEM, string.Join(",", listauthorizebyrole.Where(x => x.Create == true).Select(x => x.FuncCode).ToList())),
-                            //new Claim(AuthorizeCode.SUA, string.Join(",", listauthorizebyrole.Where(x => x.Edit == true).Select(x => x.FuncCode).ToList())),
-                            //new Claim(AuthorizeCode.XOA, string.Join(",", listauthorizebyrole.Where(x => x.Delete == true).Select(x => x.FuncCode).ToList())),
-                            //new Claim(AuthorizeCode.XEM, string.Join(",", listauthorizebyrole.Where(x => x.View == true).Select(x => x.FuncCode).ToList())),
-                            //new Claim(AuthorizeCode.DUYET, string.Join(",", listauthorizebyrole.Where(x => x.Accept == true).Select(x => x.FuncCode).ToList())),
-                            //new Claim(AuthorizeCode.CONGBO, string.Join(",", listauthorizebyrole.Where(x => x.Publish == true).Select(x => x.FuncCode).ToList()))
              };
 
             var claimsIdentity = new ClaimsIdentity(
@@ -66,8 +73,8 @@ namespace DINTEIOT.Controllers
                                 IsPersistent = account.rememberme,
                                 ExpiresUtc = DateTime.UtcNow.AddMinutes(4320)
                             });
-            return Redirect("/login/AuthorCapCha");
-            //return Ok(new { data = 1, url = "/admin/home/index" });
+            //return Redirect("/login/AuthorCapCha");
+            return Redirect("/home");
         }
         public Account ValidateUser(Account accounts)
         {
@@ -110,7 +117,18 @@ namespace DINTEIOT.Controllers
         }
         public IActionResult AuthorCapCha()
         {
+            var userchecklogin = HttpContext.User;
+            if (userchecklogin.Identity.IsAuthenticated)
+            {
+                return Redirect("/home/index");
+            }
             return View();
+        }
+        [HttpGet]
+        public IActionResult GetToken()
+        {
+            LoginHelper.LoginHelper.GetThinkBoardToken();
+            return Ok(new { data = Startup.thinkportaccesstoken });
         }
     }
 }

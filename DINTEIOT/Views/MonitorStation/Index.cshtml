@@ -132,14 +132,29 @@
                                     }
                                 </select>
                             </div>
+                            <div class="form-group" id="loaidl">
+                                <label>Loại dữ liệu quan trắc<b style="color:red">*</b></label>
+                                <select id="stationdataid" style="width:10em" class="" data-placeholder="Chọn loại dữ liệu" multiple>
+                                    <option value="" class=""></option>
+                                    @if (ViewBag.LoaiDuLieu.Count > 0)
+                                    {
+                                        @foreach (var item in ViewBag.LoaiDuLieu)
+                                        {
+
+                                            <option value="@item.stationDataId" class="l1 non-leaf">@item.stationDataName</option>
+
+                                        }
+                                    }
+                                </select>
+                            </div>
                             <div style="display: flex;">
                                 <div class="form-group">
                                     <label>Kinh Độ<b style="color:red">*</b></label>
-                                    <input type="number" class="form-control" id="longitude">
+                                    <input type="text" class="form-control" id="longitude">
                                 </div>
                                 <div class="form-group" style="margin-left:25px">
                                     <label>Vĩ độ<b style="color:red">*</b></label>
-                                    <input type="number" class="form-control" id="latitude">
+                                    <input type="text" class="form-control" id="latitude">
                                 </div>
                             </div>
                             <div class="form-group">
@@ -167,6 +182,7 @@
 </div>
 <script type="text/javascript">
     $("#selectparentid").select2ToTree();
+    $("#stationdataid").select2ToTree();
     monitorStationindex.monitorStationindex_init();
 </script>
 

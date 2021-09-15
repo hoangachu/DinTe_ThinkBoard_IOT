@@ -4,7 +4,7 @@ let stationDataName;
 let formStationData;
 var stationdataindex = {
     stationdataindex_init: function () {
-       stationdataindex_init();
+        stationdataindex_init();
     }
 };
 function stationdataindex_init() {
@@ -12,7 +12,7 @@ function stationdataindex_init() {
     $('.btnalert').on("click", function () {
         showConfirmDeleteMessage(articleindex, Show);
     });
-  
+
     //sau khi button save change được ấn
     $('#btnsaveloaidulieu').on('click', function () {
         formStationData = new FormData();
@@ -25,12 +25,12 @@ function stationdataindex_init() {
             toastrnotifywarning('Bạn đang để trống trường bắt buộc');
             return false;
         }
-     
+
         if (checkdatastationbycode(stationDataCode, stationDataid) == true) {
             toastrnotifywarning("Mã loại dữ liệu đã được sử dụng");
             return false;
         }
-     
+
         formStationData.append('stationDataName', stationDataName);
         formStationData.append('stationDataCode', stationDataCode);
 
@@ -45,10 +45,10 @@ function stationdataindex_init() {
         return false
     });
 }
-// thêm mới organ
+// thêm mới loại dl
 function insertStationData() {
     $.ajax({
-        url: "StationData/Insert",
+        url: "/StationData/Insert",
         type: "POST",
         async: false,
         data: formStationData,
@@ -60,7 +60,7 @@ function insertStationData() {
                 toastrnotifyerror(response.message)
                 return false;
             }
-            else {
+            else if (type != TUDONG) {
                 toastrnotifysuccess(response.message);
                 setTimeout(function () {
                     window.location.replace("/StationData");
@@ -72,7 +72,7 @@ function insertStationData() {
 // update organ
 function updateStationData() {
     $.ajax({
-        url: "StationData/Update",
+        url: "/StationData/Update",
         type: "POST",
         async: false,
         data: formStationData,
@@ -96,18 +96,20 @@ function updateStationData() {
 }
 
 
-//xóa organ
-function deleteorgan() {
+//xóa 
+function deletestationdata(id,type) {
     $.ajax({
-        url: "/Organ/Delete",
+        url: "/stationdata/Delete",
         type: "GET",
         async: false,
-        data: { organid: organid },
+        data: { id: id, type: type },
         success: function (response) {
             debugger
             if (response.status <= 0) {
                 showErrorMessage(response.message);
                 return false
+            }
+            else if (type == 2) {
             }
             else {
                 showSuccessMessage(response.message);
@@ -117,6 +119,15 @@ function deleteorgan() {
             }
 
         }
+    });
+}
+//xóa dl bảng MonitorStation_StationData với type = TUDONG
+function deletestationdata_MonitorStation() {
+    $.ajax({
+        url: "/stationdata/DeleteStationdata_MonitorStation",
+        type: "GET",
+        async: false
+        /*data: { id: id, type: type }*/
     });
 }
 
@@ -174,7 +185,7 @@ function ShowEditStationData(id) {
     $('#stationDataId').val(id);
     $('#stationdatamodaltitle').html("Sửa loại dữ liệu")
     $.ajax({
-        url: "stationData/updatepre?id=" +id,
+        url: "stationData/updatepre?id=" + id,
         async: false,
         type: "GET",
         success: function (response) {
@@ -189,4 +200,43 @@ function ShowEditStationData(id) {
             }
         }
     })
+}
+//Lấy loai du lieu theo tram lay tu api
+function GetStationDatabyStationFromApi(monitorstationid) {
+    debugger
+    var data = null;
+    var token = GetToken();
+    $.ajax({
+        url: '/ChartInfo/GetTimesSeriesKey',
+        type: "GET",
+        beforeSend: function (request) {
+            request.setRequestHeader("X-Authorization", "bearer " + token);
+        },
+        async: false,
+        data: { id: monitorstationid },
+        success: function (response) {
+            data = JSON.parse(response.data);
+        }
+    });
+    return data;
+}
+//Lưu loai du lieu theo tram lay tu api
+function SaveStationDatabyStationFromApi(data,guiID) {
+    debugger
+    if (data.length > 0) {
+       
+        for (i = 0; i < data.length; i++) {
+            formStationData = new FormData();
+            stationDataName = data[i];
+            stationDataCode = data[i];
+            formStationData.append('stationDataName', stationDataName);
+            formStationData.append('stationDataCode', stationDataCode);
+            formStationData.append('type', TUDONG);
+            if (checkdatastationbycode(stationDataCode, 0) == false) {
+                debugger
+                insertStationData();
+            }
+            insertMonitorStation_StationDataFromApi(guiID, data[i])
+        }
+    }
 }

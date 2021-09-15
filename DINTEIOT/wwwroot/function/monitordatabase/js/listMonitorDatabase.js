@@ -45,6 +45,7 @@ function listMonitorDatabaseindex_init() {
         formMonitorDatabase.append('monitorDatabaseTime', formatdatetoyyyyMMdd(monitorDatabaseTime));
         formMonitorDatabase.append('monitorDatabaseValue', monitorDatabaseValue);
         formMonitorDatabase.append('stationDataID', stationDataID);
+        formMonitorDatabase.append('monitorStationID', monitorStationID);
         if (monitorDatabaseid <= 0 || monitorDatabaseid == undefined) {
             insertmonitorDatabase();
         }
@@ -127,7 +128,7 @@ function deletemonitorDatabase() {
                 showSuccessMessage(response.message);
                 setTimeout(function () {
                     window.location.replace("/monitorDatabase");
-                }, 3000);
+                }, 2000);
             }
 
         }
@@ -207,4 +208,32 @@ function ShowEditMonitorStation(id) {
             }
         }
     })
+}
+
+//xóa dữ liệu
+function DeleteMonitorDB(id) {
+    monitorDatabaseid = id;
+    showConfirmDeleteMessage(accountindex, deleteafter);
+}
+function deleteafter() {
+    $.ajax({
+        url: "/Monitordatabase/Delete",
+        type: "GET",
+        async: false,
+        data: { id: monitorDatabaseid },
+        success: function (response) {
+            debugger
+            if (response.status <= 0) {
+                showErrorMessage(response.message);
+                return false
+            }
+            else {
+                showSuccessMessage(response.message);
+                setTimeout(function () {
+                    window.location.reload();
+                }, 3000);
+            }
+
+        }
+    });
 }

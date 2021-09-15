@@ -14,6 +14,8 @@ namespace DINTEIOT.Models
         public string title { get; set; }
         public string displaynumber { get; set; }
         public string url { get; set; } // đường dẫn 
+        public int text { get; set; }
+        public object[] inc { get; set; }
         public bool ckshowinhome { get; set; } // checkbox có hiển thị ngoài giao diện người dung ko
 
     }

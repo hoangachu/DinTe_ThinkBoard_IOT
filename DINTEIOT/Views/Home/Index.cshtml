@@ -1,129 +1,135 @@
 ﻿
 <link href="~/function/home/css/index.css" rel="stylesheet" />
-
 <div class="main-content">
     <section class="section">
-        <div class="section-header">
-            <h1>DashBoard</h1>
-        </div>
-        <div class="row">
-            <div class="col-lg-8">
-                <div class="card">
-                    <div class="card-header">
-                        <h4>
-                            Trạm quan trắc
-                        </h4>
-                    </div>
-                    <div class="card-body">
-                        <div id="map_div" style=""></div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-lg-4">
-                <div class="card gradient-bottom">
-                    <div class="card-header">
-                        <h4>
-                            Biểu đồ mực nước
-                        </h4>
-                    </div>
-                    <div class="card-body" id="top-5-scroll" tabindex="2" style="height: 315px; overflow: hidden; outline: none;">
-                        <figure class="highcharts-figure">
-                            <div id="container"></div>
-                            <p class="highcharts-description">
+        <div class="section-body">
+            <div class="row">
+                <a class="col-lg-3 col-md-6 col-sm-6 col-12" href="">
+                    <div class="card card-statistic-1">
+                        <div class="card-icon shadow-primary bg-primary">
+                            <i class="fas fa-map-marker-alt" style="color: white"></i>
+                        </div>
+                        <div class="card-wrap">
+                            <div class="card-header">
+                                <h4>Trạm quan trắc </h4>
+                            </div>
+                            <div class="card-body">
 
-                            </p>
-                        </figure>
+                            </div>
+                        </div>
                     </div>
-                </div>
+                </a>
+                <a class="col-lg-3 col-md-6 col-sm-6 col-12" href="">
+                    <div class="card card-statistic-1">
+                        <div class="card-icon bg-primary">
+                            <i class="fas fa-tractor" style="color: white"></i>
+                        </div>
+                        <div class="card-wrap">
+                            <div class="card-header">
+                                <h4>Phương tiện quan trắc</h4>
+                            </div>
+                            <div class="card-body">
+
+                            </div>
+                        </div>
+                    </div>
+                </a>
+                <a class="col-lg-3 col-md-6 col-sm-6 col-12">
+                    <div class="card card-statistic-1">
+                        <div class="card-icon bg-primary">
+                            <i class="fas fa-radiation-alt" style="color: white"></i>
+                        </div>
+                        <div class="card-wrap">
+                            <div class="card-header">
+                                <h4>Phương thức quan trắc</h4>
+                            </div>
+                            <div class="card-body">
+
+                            </div>
+                        </div>
+                    </div>
+                </a>
+
+                <a class="col-lg-3 col-md-6 col-sm-6 col-12">
+                    <div class="card card-statistic-1">
+                        <div class="card-icon bg-primary">
+                            <i class="fas fa-building" style="color: white"></i>
+                        </div>
+                        <div class="card-wrap">
+                            <div class="card-header">
+                                <h4>Đơn vị</h4>
+                            </div>
+                            <div class="card-body">
+
+                            </div>
+                        </div>
+                    </div>
+                </a>
+                <a class="col-lg-3 col-md-6 col-sm-6 col-12" href="">
+                    <div class="card card-statistic-1">
+                        <div class="card-icon bg-primary">
+                            <i class="far fa-user" style="color: white"></i>
+                        </div>
+                        <div class="card-wrap">
+                            <div class="card-header">
+                                <h4>Người dùng</h4>
+                            </div>
+                            <div class="card-body">
+
+                            </div>
+                        </div>
+                    </div>
+                </a>
+                <a class="col-lg-3 col-md-6 col-sm-6 col-12" href="">
+                    <div class="card card-statistic-1">
+                        <div class="card-icon bg-primary">
+                            <i class="fas fa-dice-d6" style="color: white"></i>
+                        </div>
+                        <div class="card-wrap">
+                            <div class="card-header">
+                                <h4>Vai trò người dùng</h4>
+                            </div>
+                            <div class="card-body">
+
+                            </div>
+                        </div>
+                    </div>
+                </a>
+                <a class="col-lg-3 col-md-6 col-sm-6 col-12" href="">
+                    <div class="card card-statistic-1">
+                        <div class="card-icon bg-primary">
+                            <i class="fas fa-compress-arrows-alt" style="color: white"></i>
+                        </div>
+                        <div class="card-wrap">
+                            <div class="card-header">
+                                <h4>Loại dữ liệu quan trắc</h4>
+                            </div>
+                            <div class="card-body">
+
+                            </div>
+                        </div>
+                    </div>
+                </a>
+                <a class="col-lg-3 col-md-6 col-sm-6 col-12" href="">
+                    <div class="card card-statistic-1">
+                        <div class="card-icon bg-primary">
+                            <i class="fas fa-exclamation-triangle" style="color: white"></i>
+                        </div>
+                        <div class="card-wrap">
+                            <div class="card-header">
+                                <h4>Ngưỡng cảnh báo</h4>
+                            </div>
+                            <div class="card-body">
+
+                            </div>
+                        </div>
+                    </div>
+                </a>
             </div>
-        </div>
+            </div>
     </section>
-    <script type="text/javascript">
-        google.charts.load("current", {
-            "packages": ["map"],
-            // Note: you will need to get a mapsApiKey for your project.
-            // See: https://developers.google.com/chart/interactive/docs/basic_load_libs#load-settings
-            "mapsApiKey": "AIzaSyB41DRUbKWJHPxaFjMAwdrzWzbVKartNGg"
-        });
-        google.charts.setOnLoadCallback(drawChart);
-        function drawChart() {
-            var data = google.visualization.arrayToDataTable([
-                ['Lat', 'Long', 'Name'],
-                [21.23, 106.02, 'HaNoi'],
-                [21.04, 105.78, 'Cục CNTT']
-
-            ]);
-
-            var map = new google.visualization.Map(document.getElementById('map_div'));
-            map.draw(data, {
-                showTooltip: true,
-                showInfoWindow: true
-            });
-        }
-        Highcharts.chart('container', {
-            chart: {
-                type: 'column'
-            },
-            title: {
-                text: 'Monthly Average Rainfall'
-            },
-            subtitle: {
-                text: 'Source: WorldClimate.com'
-            },
-            xAxis: {
-                categories: [
-                    'Jan',
-                    'Feb',
-                    'Mar',
-                    'Apr',
-                    'May',
-                    'Jun',
-                    'Jul',
-                    'Aug',
-                    'Sep',
-                    'Oct',
-                    'Nov',
-                    'Dec'
-                ],
-                crosshair: true
-            },
-            yAxis: {
-                min: 0,
-                title: {
-                    text: 'Rainfall (mm)'
-                }
-            },
-            tooltip: {
-                headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
-                pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
-                    '<td style="padding:0"><b>{point.y:.1f} mm</b></td></tr>',
-                footerFormat: '</table>',
-                shared: true,
-                useHTML: true
-            },
-            plotOptions: {
-                column: {
-                    pointPadding: 0.2,
-                    borderWidth: 0
-                }
-            },
-            series: [{
-                name: 'Tokyo',
-                data: [49.9, 71.5, 106.4, 129.2, 144.0, 176.0, 135.6, 148.5, 216.4, 194.1, 95.6, 54.4]
-
-            }, {
-                name: 'New York',
-                data: [83.6, 78.8, 98.5, 93.4, 106.0, 84.5, 105.0, 104.3, 91.2, 83.5, 106.6, 92.3]
-
-            }, {
-                name: 'London',
-                data: [48.9, 38.8, 39.3, 41.4, 47.0, 48.3, 59.0, 59.6, 52.4, 65.2, 59.3, 51.2]
-
-            }, {
-                name: 'Berlin',
-                data: [42.4, 33.2, 34.5, 39.7, 52.6, 75.5, 57.4, 60.4, 47.6, 39.1, 46.8, 51.1]
-
-            }]
-        });
-    </script>
 </div>
+
+<script>
+    homeindex.homeindex_init();
+</script>

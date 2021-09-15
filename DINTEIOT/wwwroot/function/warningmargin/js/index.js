@@ -149,19 +149,19 @@ function checkwarningMarginbyname(warningMarginName, id) {
     return check;
 }
 //check mã loại dl đã tồn tại chưa
-function checkdatastationbycode(warningMarginCode, id) {
-    var check;
-    $.ajax({
-        url: "/warningMargin/CheckwarningMarginByCode",
-        type: "POST",
-        async: false,
-        data: { warningMarginCode: warningMarginCode, id: id },
-        success: function (response) {
-            check = response.data;
-        }
-    });
-    return check;
-}
+//function checkdatastationbycode(warningMarginCode, id) {
+//    var check;
+//    $.ajax({
+//        url: "/warningMargin/CheckwarningMarginByCode",
+//        type: "POST",
+//        async: false,
+//        data: { warningMarginCode: warningMarginCode, id: id },
+//        success: function (response) {
+//            check = response.data;
+//        }
+//    });
+//    return check;
+//}
 
 //button thêm ngưỡng được nhấn
 function ShowCreateWarningMargin() {

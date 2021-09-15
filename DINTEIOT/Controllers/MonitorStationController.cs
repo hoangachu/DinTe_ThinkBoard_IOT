@@ -1,5 +1,7 @@
 ﻿using DINTEIOT.Helpers;
+using DINTEIOT.Models;
 using DINTEIOT.Models.MonitorStation;
+using DINTEIOT.Models.StationData;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using System;
@@ -16,14 +18,16 @@ namespace DINTEIOT.Controllers
     {
         public List<MonitorStation> GetAllListMonitorStation();
         public List<MonitorStation> GetListMonitorStation(MonitorStationFilter MonitorStationFilter);
+        public MonitorStation GetMonitorStationByID(int id = 0);
     }
     public class MonitorStationController : BaseController, IMonitorStationController  // Trạm quan trắc
     {
         private IOrganController _iorganController;
-
-        public MonitorStationController(IOrganController IOrganController)
+        private IStationDataController _iStationDataController;
+        public MonitorStationController(IOrganController IOrganController, IStationDataController IStationDataController)
         {
             _iorganController = IOrganController;
+            _iStationDataController = IStationDataController;
         }
         public IActionResult Index()
         {
@@ -31,6 +35,7 @@ namespace DINTEIOT.Controllers
             if (TempData["OptionFilter"] != null) { MonitorStationFilter = JsonConvert.DeserializeObject<MonitorStationFilter>((string)TempData["OptionFilter"]); TempData.Keep(); }
             ViewBag.CurrentPageName = ScreenName.MonitorStation;
             ViewBag.CoQuan = _iorganController.GetSelectTreeViewNode();
+            ViewBag.LoaiDuLieu = _iStationDataController.GetAllListStationData();
             return View(GetListMonitorStation(MonitorStationFilter));
         }
         //lấy danh sách ngưỡng cảnh báo có lọc
@@ -60,8 +65,8 @@ namespace DINTEIOT.Controllers
                                 MonitorStation.monitorStationID = dr.IsDBNull("MonitorStationId") == true ? 0 : (int)dr["MonitorStationId"];
                                 MonitorStation.monitorStationName = dr.IsDBNull("MonitorStationName") == true ? null : (string)dr["MonitorStationName"];
                                 MonitorStation.monitorStationCode = dr.IsDBNull("monitorStationCode") == true ? null : (string)dr["monitorStationCode"];
-                                MonitorStation.latitude = dr.IsDBNull("latitude") == true ? 0 : (int)dr["latitude"];
-                                MonitorStation.longitude = dr.IsDBNull("longitude") == true ? 0 : (int)dr["longitude"];
+                                MonitorStation.latitude = dr.IsDBNull("latitude") == true ? 0 : (float)(double)dr["latitude"];
+                                MonitorStation.longitude = dr.IsDBNull("longitude") == true ? 0 : (float)(double)dr["longitude"];
                                 MonitorStation.siteAddress = dr.IsDBNull("siteAddress") == true ? null : (string)dr["siteAddress"];
                                 MonitorStation.organName = dr.IsDBNull("organName") == true ? null : (string)dr["organName"];
                                 MonitorStation.address = dr.IsDBNull("address") == true ? null : (string)dr["address"];
@@ -107,12 +112,14 @@ namespace DINTEIOT.Controllers
                                 MonitorStation.monitorStationID = dr.IsDBNull("MonitorStationId") == true ? 0 : (int)dr["MonitorStationId"];
                                 MonitorStation.monitorStationName = dr.IsDBNull("MonitorStationName") == true ? null : (string)dr["MonitorStationName"];
                                 MonitorStation.monitorStationCode = dr.IsDBNull("monitorStationCode") == true ? null : (string)dr["monitorStationCode"];
-                                MonitorStation.latitude = dr.IsDBNull("latitude") == true ? 0 : (int)dr["latitude"];
-                                MonitorStation.longitude = dr.IsDBNull("longitude") == true ? 0 : (int)dr["longitude"];
+                                MonitorStation.latitude = dr.IsDBNull("latitude") == true ? 0 : (float)(double)dr["latitude"];
+                                MonitorStation.longitude = dr.IsDBNull("longitude") == true ? 0 : (float)(double)dr["longitude"];
                                 MonitorStation.siteAddress = dr.IsDBNull("siteAddress") == true ? null : (string)dr["siteAddress"];
                                 //MonitorStation.organName = dr.IsDBNull("organName") == true ? null : (string)dr["organName"];
                                 MonitorStation.address = dr.IsDBNull("address") == true ? null : (string)dr["address"];
                                 MonitorStation.description = dr.IsDBNull("description") == true ? null : (string)dr["description"];
+                                MonitorStation.GuiID = dr.IsDBNull("GuiID") == true ? null : (string)dr["GuiID"];
+                                MonitorStation.type = dr.IsDBNull("type") == true ? 1 : (int)dr["type"];
                                 listMonitorStation.Add(MonitorStation);
                             }
                             cmd.Dispose();
@@ -171,13 +178,14 @@ namespace DINTEIOT.Controllers
                                 MonitorStation.monitorStationID = dr.IsDBNull("MonitorStationId") == true ? 0 : (int)dr["MonitorStationId"];
                                 MonitorStation.monitorStationName = dr.IsDBNull("MonitorStationName") == true ? null : (string)dr["MonitorStationName"];
                                 MonitorStation.monitorStationCode = dr.IsDBNull("monitorStationCode") == true ? null : (string)dr["monitorStationCode"];
-                                MonitorStation.latitude = dr.IsDBNull("latitude") == true ? 0 : (int)dr["latitude"];
-                                MonitorStation.longitude = dr.IsDBNull("longitude") == true ? 0 : (int)dr["longitude"];
+                                MonitorStation.latitude = dr.IsDBNull("latitude") == true ? 0 : (float)(double)dr["latitude"];
+                                MonitorStation.longitude = dr.IsDBNull("longitude") == true ? 0 : (float)(double)dr["longitude"];
                                 MonitorStation.siteAddress = dr.IsDBNull("siteAddress") == true ? null : (string)dr["siteAddress"];
                                 MonitorStation.address = dr.IsDBNull("address") == true ? null : (string)dr["address"];
                                 MonitorStation.description = dr.IsDBNull("description") == true ? null : (string)dr["description"];
                                 MonitorStation.organName = dr.IsDBNull("organName") == true ? null : (string)dr["organName"];
                                 MonitorStation.organID = dr.IsDBNull("organID") == true ? 0 : (int)dr["organID"];
+                                MonitorStation.ListStationData = _iStationDataController.GetStationDataByMonitorStationID(MonitorStation.monitorStationID);
                                 break;
                             }
                             cmd.Dispose();
@@ -194,10 +202,10 @@ namespace DINTEIOT.Controllers
             }
             return MonitorStation;
         }
-    
+
 
         [HttpPost]
-        public IActionResult Insert(MonitorStation MonitorStation)  // Thêm mới
+        public IActionResult Insert(MonitorStation MonitorStation, string[] listStationDataId)  // Thêm mới
         {
             var i = 0;
             try
@@ -212,14 +220,26 @@ namespace DINTEIOT.Controllers
                         cmd.Parameters.Add("@MonitorStationName          ", SqlDbType.NVarChar).Value = MonitorStation.monitorStationName == null ? DBNull.Value : MonitorStation.monitorStationName;
                         cmd.Parameters.Add("@monitorStationCode       ", SqlDbType.VarChar).Value = MonitorStation.monitorStationCode == null ? DBNull.Value : MonitorStation.monitorStationCode;
                         cmd.Parameters.Add("@organID                     ", SqlDbType.Int).Value = MonitorStation.organID == 0 ? DBNull.Value : MonitorStation.organID;
-                        cmd.Parameters.Add("@longitude              ", SqlDbType.Int).Value = MonitorStation.longitude == 0 ? DBNull.Value : MonitorStation.longitude;
-                        cmd.Parameters.Add("@latitude                ", SqlDbType.Int).Value = MonitorStation.latitude == 0 ? DBNull.Value : MonitorStation.latitude;
+                        cmd.Parameters.Add("@longitude              ", SqlDbType.Float).Value = MonitorStation.longitude == 0 ? DBNull.Value : MonitorStation.longitude;
+                        cmd.Parameters.Add("@latitude                ", SqlDbType.Float).Value = MonitorStation.latitude == 0 ? DBNull.Value : MonitorStation.latitude;
                         cmd.Parameters.Add("@address                  ", SqlDbType.VarChar).Value = MonitorStation.address == null ? DBNull.Value : MonitorStation.address;
                         cmd.Parameters.Add("@siteAddress                ", SqlDbType.VarChar).Value = MonitorStation.siteAddress == null ? DBNull.Value : MonitorStation.siteAddress;
+                        cmd.Parameters.Add("@type                ", SqlDbType.Int).Value = MonitorStation.type == 0 ? DBNull.Value : MonitorStation.type;
+                        cmd.Parameters.Add("@GuiID                ", SqlDbType.VarChar).Value = MonitorStation.GuiID == null ? DBNull.Value : MonitorStation.GuiID;
                         cmd.Parameters.Add("@description            ", SqlDbType.VarChar).Value = MonitorStation.description == null ? DBNull.Value : MonitorStation.description;
-                        cmd.Parameters.Add("@monitorStationID            ", SqlDbType.Int).Direction = ParameterDirection.Output;
+                        cmd.Parameters.Add("@monitorStationID", SqlDbType.Int).Direction = ParameterDirection.Output;
                         con.Open();
                         i = cmd.ExecuteNonQuery();
+                        int monitorStationID = Convert.ToInt32(cmd.Parameters["@monitorStationID"].Value.ToString());
+                        if (i > 0)
+                        {
+                            if (listStationDataId.Length > 0 && monitorStationID > 0)
+                            {
+                                List<int> listid = new List<int>();
+                                listid = listStationDataId[0].Split(',').Select(x => Convert.ToInt32(x)).ToList();
+                                InsertToMonitorStation_StationData(listid, monitorStationID);
+                            }
+                        }
                     }
                 }
             }
@@ -231,7 +251,7 @@ namespace DINTEIOT.Controllers
             return Ok(new { status = (int)ExitCodes.Success, data = i, message = "Thêm mới thành công" });
 
         }
-        public IActionResult Update(MonitorStation MonitorStation) // Sửa
+        public IActionResult Update(MonitorStation MonitorStation, string[] listStationDataId) // Sửa
         {
             var i = 0;
             try
@@ -244,15 +264,23 @@ namespace DINTEIOT.Controllers
                         cmd.Parameters.Add("@MonitorStationName          ", SqlDbType.NVarChar).Value = MonitorStation.monitorStationName == null ? DBNull.Value : MonitorStation.monitorStationName;
                         cmd.Parameters.Add("@monitorStationCode     ", SqlDbType.VarChar).Value = MonitorStation.monitorStationCode == null ? DBNull.Value : MonitorStation.monitorStationCode;
                         cmd.Parameters.Add("@organID     ", SqlDbType.Int).Value = MonitorStation.organID == 0 ? DBNull.Value : MonitorStation.organID;
-                        cmd.Parameters.Add("@longitude              ", SqlDbType.Int).Value = MonitorStation.longitude == 0 ? DBNull.Value : MonitorStation.longitude;
-                        cmd.Parameters.Add("@latitude       ", SqlDbType.Int).Value = MonitorStation.latitude == 0 ? DBNull.Value : MonitorStation.latitude;
+                        cmd.Parameters.Add("@longitude              ", SqlDbType.Float).Value = MonitorStation.longitude == 0 ? DBNull.Value : MonitorStation.longitude;
+                        cmd.Parameters.Add("@latitude       ", SqlDbType.Float).Value = MonitorStation.latitude == 0 ? DBNull.Value : MonitorStation.latitude;
                         cmd.Parameters.Add("@address     ", SqlDbType.VarChar).Value = MonitorStation.address == null ? DBNull.Value : MonitorStation.address;
                         cmd.Parameters.Add("@siteAddress     ", SqlDbType.VarChar).Value = MonitorStation.siteAddress == null ? DBNull.Value : MonitorStation.siteAddress;
                         cmd.Parameters.Add("@description     ", SqlDbType.VarChar).Value = MonitorStation.description == null ? DBNull.Value : MonitorStation.description;
                         cmd.Parameters.Add("@monitorStationID            ", SqlDbType.Int).Value = MonitorStation.monitorStationID == 0 ? DBNull.Value : MonitorStation.monitorStationID;
                         con.Open();
                         i = cmd.ExecuteNonQuery();
-
+                        if (i > 0)
+                        {
+                            if (listStationDataId.Length > 0 && MonitorStation.monitorStationID > 0)
+                            {
+                                List<int> listid = new List<int>();
+                                listid = listStationDataId[0].Split(',').Select(x => Convert.ToInt32(x)).ToList();
+                                InsertToMonitorStation_StationData(listid, MonitorStation.monitorStationID);
+                            }
+                        }
                     }
                 }
             }
@@ -304,8 +332,8 @@ namespace DINTEIOT.Controllers
                                 MonitorStation.monitorStationID = dr.IsDBNull("MonitorStationId") == true ? 0 : (int)dr["MonitorStationId"];
                                 MonitorStation.monitorStationName = dr.IsDBNull("MonitorStationName") == true ? null : (string)dr["MonitorStationName"];
                                 MonitorStation.monitorStationCode = dr.IsDBNull("monitorStationCode") == true ? null : (string)dr["monitorStationCode"];
-                                MonitorStation.latitude = dr.IsDBNull("MonitorStationValueTo") == true ? 0 : (int)dr["latitude"];
-                                MonitorStation.longitude = dr.IsDBNull("longitude") == true ? 0 : (int)dr["longitude"];
+                                MonitorStation.latitude = dr.IsDBNull("MonitorStationValueTo") == true ? 0 : (float)(double)dr["latitude"];
+                                MonitorStation.longitude = dr.IsDBNull("longitude") == true ? 0 : (float)(double)dr["longitude"];
                                 MonitorStation.siteAddress = dr.IsDBNull("siteAddress") == true ? null : (string)dr["siteAddress"];
                                 MonitorStation.address = dr.IsDBNull("address") == true ? null : (string)dr["address"];
                                 MonitorStation.description = dr.IsDBNull("description") == true ? null : (string)dr["description"];
@@ -348,8 +376,8 @@ namespace DINTEIOT.Controllers
                                 MonitorStation.monitorStationID = dr.IsDBNull("MonitorStationId") == true ? 0 : (int)dr["MonitorStationId"];
                                 MonitorStation.monitorStationName = dr.IsDBNull("MonitorStationName") == true ? null : (string)dr["MonitorStationName"];
                                 MonitorStation.monitorStationCode = dr.IsDBNull("monitorStationCode") == true ? null : (string)dr["monitorStationCode"];
-                                MonitorStation.latitude = dr.IsDBNull("MonitorStationValueTo") == true ? 0 : (int)dr["latitude"];
-                                MonitorStation.longitude = dr.IsDBNull("longitude") == true ? 0 : (int)dr["longitude"];
+                                MonitorStation.latitude = dr.IsDBNull("MonitorStationValueTo") == true ? 0 : (float)(double)dr["latitude"];
+                                MonitorStation.longitude = dr.IsDBNull("longitude") == true ? 0 : (float)(double)dr["longitude"];
                                 MonitorStation.siteAddress = dr.IsDBNull("siteAddress") == true ? null : (string)dr["siteAddress"];
                                 MonitorStation.address = dr.IsDBNull("address") == true ? null : (string)dr["address"];
                                 MonitorStation.description = dr.IsDBNull("description") == true ? null : (string)dr["description"];
@@ -369,5 +397,135 @@ namespace DINTEIOT.Controllers
             }
             return MonitorStation;
         }
+
+        public void InsertToMonitorStation_StationData(List<int> listid, int monitorstationid = 0)
+        {
+            try
+            {
+                using (SqlConnection con = new SqlConnection(Startup.connectionString))
+                {
+
+                    using (SqlCommand cmd = new SqlCommand("Insert_MonitorStation_StationData_v1", con))
+                    {
+                        cmd.CommandType = System.Data.CommandType.StoredProcedure;
+                        var table = new DataTable();
+                        table.Columns.Add("ID", typeof(int));
+                        listid.ForEach(x => table.Rows.Add(x));
+
+                        var pList = new SqlParameter("@list", SqlDbType.Structured);
+                        pList.TypeName = "dbo.ListID";
+                        pList.Value = table;
+                        cmd.Parameters.Add(pList);
+                        cmd.Parameters.Add("@monitorstationid", SqlDbType.Int).Value = monitorstationid;
+
+                        con.Open();
+                        cmd.ExecuteNonQuery();
+
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                //return Ok(new { status = (int)ExitCodes.Error, data = i, message = e.Message });
+            }
+        }
+        public void InsertToMonitorStation_StationData_FromApi(string guiId, string key)
+        {
+            try
+            {
+                using (SqlConnection con = new SqlConnection(Startup.connectionString))
+                {
+
+                    using (SqlCommand cmd = new SqlCommand("Insert_MonitorStation_StationData_FromAPI_v1", con))
+                    {
+                        cmd.CommandType = System.Data.CommandType.StoredProcedure;
+                        cmd.Parameters.Add("@guiId", SqlDbType.VarChar).Value = guiId == null ? DBNull.Value : guiId;
+                        cmd.Parameters.Add("@key", SqlDbType.VarChar).Value = key == null ? DBNull.Value : key;
+                        cmd.Parameters.Add("@type", SqlDbType.VarChar).Value = (int)MethodType.TUDONG ;
+                        con.Open();
+                        cmd.ExecuteNonQuery();
+
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                //return Ok(new { status = (int)ExitCodes.Error, data = i, message = e.Message });
+            }
+        }
+        public IActionResult Delete(int id, int type = 0)
+        {
+            try
+            {
+                using (SqlConnection con = new SqlConnection(Startup.connectionString))
+                {
+
+                    using (SqlCommand cmd = new SqlCommand("Delete_MonitorStation_v1", con))
+                    {
+                        cmd.CommandType = System.Data.CommandType.StoredProcedure;
+
+                        cmd.Parameters.Add("@id       ", SqlDbType.VarChar).Value = id == 0 ? DBNull.Value : id;
+                        cmd.Parameters.Add("@type", SqlDbType.Int).Value = type;
+                        con.Open();
+                        cmd.ExecuteNonQuery();
+                        
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                //return Ok(new { status = (int)ExitCodes.Error, data = i, message = e.Message });
+            }
+
+            return Ok(new { status = (int)ExitCodes.Success, data = "", message = "Xóa thành công" });
+        }
+        public List<MonitorStation> GetAllListMonitorStationByStationDataID(int id=0,int type =0,string key = null) // get ds trạm theo loại dl
+        {
+            List<MonitorStation> listMonitorStation = new List<MonitorStation>();
+            using (SqlConnection con = new SqlConnection(Startup.connectionString))
+            {
+                using (SqlCommand cmd = new SqlCommand("MonitorStation_GetAllListMonitorStationByStationDataID_v1", con))
+                {
+                    {
+                        try
+                        {
+                            cmd.CommandType = System.Data.CommandType.StoredProcedure;
+                            cmd.Parameters.Add("@id", SqlDbType.Int).Value = id == 0 ? DBNull.Value :id;
+                            cmd.Parameters.Add("@type", SqlDbType.Int).Value = type == 0 ? (int)MethodType.THUCONG : type;
+                            cmd.Parameters.Add("@key", SqlDbType.VarChar).Value = key  == null ? DBNull.Value :key;
+                            con.Open();
+                            SqlDataReader dr = cmd.ExecuteReader();
+
+                            while (dr.Read())
+                            {
+                                MonitorStation MonitorStation = new MonitorStation();
+                                MonitorStation.monitorStationID = dr.IsDBNull("MonitorStationId") == true ? 0 : (int)dr["MonitorStationId"];
+                                MonitorStation.monitorStationName = dr.IsDBNull("MonitorStationName") == true ? null : (string)dr["MonitorStationName"];
+                                MonitorStation.monitorStationCode = dr.IsDBNull("monitorStationCode") == true ? null : (string)dr["monitorStationCode"];
+                                MonitorStation.latitude = dr.IsDBNull("latitude") == true ? 0 : (float)(double)dr["latitude"];
+                                MonitorStation.longitude = dr.IsDBNull("longitude") == true ? 0 : (float)(double)dr["longitude"];
+                                MonitorStation.siteAddress = dr.IsDBNull("siteAddress") == true ? null : (string)dr["siteAddress"];
+                                //MonitorStation.organName = dr.IsDBNull("organName") == true ? null : (string)dr["organName"];
+                                MonitorStation.address = dr.IsDBNull("address") == true ? null : (string)dr["address"];
+                                MonitorStation.description = dr.IsDBNull("description") == true ? null : (string)dr["description"];
+                                MonitorStation.GuiID = dr.IsDBNull("GuiID") == true ? null : (string)dr["GuiID"];
+                                MonitorStation.type = dr.IsDBNull("type") == true ? 1 : (int)dr["type"];
+                                listMonitorStation.Add(MonitorStation);
+                            }
+                            cmd.Dispose();
+                            dr.Close();
+                        }
+                        catch (Exception e)
+                        {
+                            //throw e;
+                        }
+
+                        con.Close();
+                    }
+                }
+            }
+            return listMonitorStation;
+        }
+
     }
 }

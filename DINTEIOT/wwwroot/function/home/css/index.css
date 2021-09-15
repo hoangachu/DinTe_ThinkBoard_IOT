@@ -16,6 +16,10 @@
     height: 400px;
 }
 
+.card-header-modal {
+    padding-left: 30px !important;
+}
+
 .highcharts-data-table table {
     font-family: Verdana, sans-serif;
     border-collapse: collapse;
@@ -47,4 +51,16 @@
 
 .highcharts-data-table tr:hover {
     background: #f1f7ff;
+}
+#top-5-scroll{
+    height:100% !important
+}
+.inputfilter{
+    width:20%
+}
+.section-body{
+    margin-top:100px !important
+}
+a {
+    cursor:pointer !important
 }

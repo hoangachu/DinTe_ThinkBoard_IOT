@@ -50,6 +50,7 @@ namespace WebApi.Helpers
         public const string StationMethod = " StationMethod";
         public const string Account = " Account";
         public const string MonitorDatabase = "MonitorDatabase";
+        public const string ChartInfo = "ChartInfo";
     }
     public static class Vi_ScreenName
     {

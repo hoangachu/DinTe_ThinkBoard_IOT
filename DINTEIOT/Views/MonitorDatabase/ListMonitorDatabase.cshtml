@@ -6,13 +6,18 @@
         monitorDatabaseFilter = Newtonsoft.Json.JsonConvert.DeserializeObject<DINTEIOT.Models.MonitorDatabase.MonitorDatabaseFilter>((string)TempData["OptionFilter"]);
         TempData.Keep();
     }
+    var monitorStationName = "";
+    if (Model.Count > 0)
+    {
+        monitorStationName = Model.First().monitorStationName;
+    }
 }
 <link href="~/function/monitordatabase/css/index.css" rel="stylesheet" />
 <div class="main-content">
-    <input style="display:none" id="monitorStationID" value="@ViewBag.MonitorID"/>
+    <input style="display:none" id="monitorStationID" value="@ViewBag.MonitorID" />
     <section class="section">
         <div class="section-header">
-            <h1>Danh sách số liệu của trạm</h1>
+            <h1>Danh sách số liệu của @ViewBag.MonitorName</h1>
             <div class="section-header-breadcrumb">
                 <ul class="nav nav-pills active">
                     <li class="nav-item">
@@ -29,7 +34,7 @@
                 <div class="col-12 col-md-12 col-lg-12">
                     <div class="card">
                         <div class="card-header">
-                            <select class="form-control selectfilter inputfilter" placeholder="Chọn đơn vị" id="OrganIDfilter" style="">
+                            <select class="form-control selectfilter inputfilter" placeholder="Chọn đơn vị" id="stationDataIDfilter" style="">
                                 @if (ViewBag.LoaiDuLieu.Count > 0)
                                 {
                                     <option class="l1 non-leaf" value="0">Tất cả</option>
@@ -71,7 +76,7 @@
                                                     <i class="far fa-edit">
                                                     </i>
                                                 </button>
-                                                <button data-toggle="tooltip" data-placement="bottom" data-original-title="Xóa trạm quan trắc" href="" class="btn btn-icon" style="margin-left:5px" id="">
+                                                <button data-toggle="tooltip" onclick="DeleteMonitorDB(@item.monitorDatabaseID)" data-placement="bottom" data-original-title="Xóa dữ liệu" href="" class="btn btn-icon" style="margin-left:5px" id="">
                                                     <i class="fas fa-trash"></i>
                                                 </button>
                                             </td>
@@ -122,6 +127,12 @@
                             </div>
                             <div style="display: flex;">
                                 <div class="form-group">
+                                    <input type="number" min="0" max="23" placeholder="23" id="hour">  :
+                                    <input type="number" min="0" max="59" placeholder="00" id="minutes">
+                                </div>
+                            </div>
+                            <div style="display: flex;">
+                                <div class="form-group">
                                     <label>Giá trị<b style="color:red">*</b></label>
                                     <input type="number" class="form-control" id="monitorDatabaseValue">
                                 </div>
@@ -143,6 +154,16 @@
 </div>
 <script type="text/javascript">
     $("#stationDataID").select2ToTree();
+    document.querySelectorAll('input[type=number]')
+        .forEach(e => e.oninput = () => {
+            // Always 2 digits
+            if (e.value.length >= 2) e.value = e.value.slice(0, 2);
+            // 0 on the left (doesn't work on FF)
+            if (e.value.length === 1) e.value = '0' + e.value;
+            // Avoiding letters on FF
+            if (!e.value) e.value = '00';
+        });
+
     listMonitorDatabaseindex.listMonitorDatabaseindex_init();
 </script>
 

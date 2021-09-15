@@ -9,6 +9,7 @@ using Microsoft.Extensions.Hosting;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http;
 using System.Threading.Tasks;
 
 namespace DINTEIOT
@@ -17,10 +18,18 @@ namespace DINTEIOT
     {
         public IConfiguration Configuration { get; }
         public static string connectionString = "";
+        public static string ConnectionStringsThinkBoard = "";
+        public static string usernametb = "";
+        public static string passwordtb = "";
+        public static string thinkportaccesstoken { get; set; }
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
             connectionString = Configuration.GetConnectionString("DefaultConnection").ToString();
+            ConnectionStringsThinkBoard = Configuration.GetValue<string>("ConnectionStringsThinkBoard");
+            usernametb = Configuration.GetValue<string>("usernametb");
+            passwordtb = Configuration.GetValue<string>("passwordtb");
+         
         }
 
         // This method gets called by the runtime. Use this method to add services to the container.
@@ -29,6 +38,8 @@ namespace DINTEIOT
             services.AddScoped<IStationDataController, StationDataController>();
             services.AddScoped<IOrganController,OrganController>();
             services.AddScoped<IMonitorStationController, MonitorStationController>();
+            services.AddScoped<IMonitorDatabaseController, MonitorDatabaseController>();
+            services.AddScoped<IWarningMarginController, WarningMarginController>();
             services.AddControllersWithViews();
             services.AddAuthentication(x =>
             {

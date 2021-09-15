@@ -41,3 +41,7 @@
 .modal-content {
     height: 0%
 }
+
+td {
+    cursor:pointer
+}

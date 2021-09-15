@@ -11,6 +11,7 @@ namespace DINTEIOT.Models.StationData
         public int stationDataId { get; set; }
         public string  stationDataName { get; set; }
         public string stationDataCode { get; set; }
+        public int type { get; set; }
         public long totalrecord { get; set; }
     }
     public class StationDataFilter : OptionFilter

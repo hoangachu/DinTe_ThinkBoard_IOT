@@ -2030,7 +2030,7 @@ a.bb {
 .gradient-bottom {
   position: relative; }
   .gradient-bottom:after {
-    content: ' ';
+  /*  content: ' ';*/
     position: absolute;
     bottom: 41px;
     left: 0;

@@ -1,9 +1,15 @@
-﻿using System;
+﻿using DINTEIOT;
+using DINTEIOT.Models.Account;
+using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Net.Http;
+using System.Net.Http.Json;
 using System.Security.Cryptography;
 using System.Text;
+using System.Threading.Tasks;
 using System.Xml;
 using System.Xml.Linq;
 
@@ -127,6 +133,42 @@ namespace LoginHelper
                 return timeabout = span.Minutes + " phút trước";
             }
             return timeabout;
+        }
+        public async static Task GetThinkBoardToken()
+        {
+            var token = new ThinkBoardToken();
+            try
+            {
+                var httpClient = new HttpClient();
+
+                var httpRequestMessage = new HttpRequestMessage();
+                httpRequestMessage.Method = HttpMethod.Post;
+                httpRequestMessage.RequestUri = new Uri(Startup.ConnectionStringsThinkBoard + "/api/auth/login");
+
+                // Tạo StringContent
+                string jsoncontent = JsonConvert.SerializeObject(new { username  = Startup.usernametb, password = Startup.passwordtb });
+                var httpContent = new StringContent(jsoncontent, Encoding.UTF8, "application/json");
+                httpRequestMessage.Content = httpContent;
+
+                var response = await httpClient.SendAsync(httpRequestMessage);
+                var responseContent = await response.Content.ReadAsStringAsync();
+                token = JsonConvert.DeserializeObject<ThinkBoardToken>(responseContent);
+                Startup.thinkportaccesstoken = token.token;
+            }
+            catch(Exception e)
+            {
+
+            }
+        }
+        public class JsonContent : StringContent
+        {
+            public JsonContent(object obj) :
+                base(JsonConvert.SerializeObject(obj), Encoding.UTF8, "application/json")
+            { }
+        }
+        public class ThinkBoardToken
+        {
+            public string token { get; set; }
         }
     }
 }

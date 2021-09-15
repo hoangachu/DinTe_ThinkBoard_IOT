@@ -1,0 +1,128 @@
+﻿@{
+    DINTEIOT.Models.ChartInfo.ChartInfoFilter chartInfoFilter = new DINTEIOT.Models.ChartInfo.ChartInfoFilter();
+    if (TempData["ChartInfoFilter"] != null)
+    {
+        chartInfoFilter = Newtonsoft.Json.JsonConvert.DeserializeObject<DINTEIOT.Models.ChartInfo.ChartInfoFilter>((string)TempData["ChartInfoFilter"]);
+        TempData.Keep();
+    }
+}
+<link href="~/function/chartinfo/css/index.css" rel="stylesheet" />
+<div class="main-content" id="main-content">
+    <section class="section">
+        <div class="section-header headertilte">
+            <h1>Thông tin số liệu theo nhiều trạm</h1>
+        </div>
+        <div class="section-header headertilte">
+            <p style="display: contents; justify-content: center; margin-left: 30px; font-weight: 700; ">Chọn loại biểu đồ</p>
+            <select class="form-control selectfilter inputfilter" placeholder="Chọn loại biểu đồ" id="ChartTypeMulti" style="margin-left: 10px; margin-right: 10px" onchange="CheckSelectLoaiBieuDoMulti()">
+                @if (ViewBag.LoaiDuLieu.Count > 0)
+                {
+                    <option class="" value="0">Tất cả</option>
+                    @foreach (var item in ViewBag.LoaiDuLieu)
+                    {
+                        if (item.type == 1 || item.type == 0)
+                        {
+
+                            <option class="" value="@item.stationDataId" data-type="1">@item.stationDataName</option>
+
+                        }
+                        else
+                        {
+
+                            <option class="" value="@item.stationDataCode" data-type="@item.type">@item.stationDataName</option>
+                        }
+                    }
+                }
+            </select>
+            <p style="display: contents; justify-content: center; font-weight: 700;">Chọn trạm quan trắc</p>
+            <select class="form-control selectfilter inputfilter" placeholder="" id="MonitorStationfilterMulti" style="margin-left:10px;margin-right:10px" onchange="CheckSelectedMulti()" multiple>
+            </select>
+
+            <div class="section-header-breadcrumb">
+                <div class="breadcrumb-item active">
+                    <ul class="nav nav-pills active">
+                        <li class="nav-item">
+                            <a data-toggle="modal" data-target="" class="nav-link " href="#" onclick="CreateTemplate()">
+                                <i class="fas fa-plus" data-placement="bottom"></i> Publish
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+
+            </div>
+
+
+        </div>
+        <div class="row" id="template">
+
+            <div class="col-lg-12">
+                <div class="card">
+                    <div class="card-header card-header-modal">
+                        <h4>
+                            Trạm quan trắc
+                        </h4>
+                    </div>
+                    <div class="card-body">
+                        <div id="map" style=""></div>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-body">
+                        <div class="section-body">
+                            <div class="row">
+                                <div class="col-12 col-md-12 col-lg-12">
+                                    <div class="card">
+                                        <div class="card-header card-header-form">
+                                            <select class="form-control selectfilter inputfilter" placeholder="Chọn đơn vị" id="TimeDurationSelect" style="" onchange="GetListDBByDatePre();">
+                                                <option value="1">1 tuần</option>
+                                                <option value="2">1 tháng</option>
+                                                <option value="3">3 tháng</option>
+                                            </select>
+                                        </div>
+                                        <div class="card-body">
+                                            <div class="table-responsive">
+                                                <table class="table table-bordered table-md" id="tabledl">
+                                                    <tr>
+                                                        <th>Thời gian</th>
+                                                        <th>Loại dữ liệu</th>
+                                                        <th>Giá trị</th>
+                                                    </tr>
+                                                    <tr id="trdefault">
+                                                        <td colspan="3">Không có dữ liệu</td>
+                                                    </tr>
+                                                    <tbody id="tbody">
+                                                    </tbody>
+
+                                                </table>
+                                            </div>
+                                        </div>
+                                        <div class="card-footer text-right">
+                                            @{ Html.RenderPartial("~/Views/Shared/_Pagination.cshtml"); }
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-12" id="listchart">
+                <div class="card gradient-bottom">
+                    <div class="card-header card-header-modal">
+                        <div id="container"></div>
+                    </div>
+                </div>
+              
+            </div>
+        </div>
+    </section>
+    <script type="text/javascript">
+        $("#MonitorStationfilterMulti").select2ToTree();
+        chartinfoindex.chartinfoindex_init();
+    </script>
+</div>
+
+
+
+
