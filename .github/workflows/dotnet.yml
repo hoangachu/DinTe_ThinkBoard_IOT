@@ -38,3 +38,35 @@ jobs:
         # A file, directory or wildcard pattern that describes what to upload
         path: website/**
         # The desired behavior if no files are found using the provided path.
+        if-no-files-found: error  # <-- last line of build job: insert below this line
+
+  deploy_staging:
+    needs: build
+    runs-on: ubuntu-latest
+
+    environment:
+      name: PRE-PROD
+      url: ${{ steps.deploywebapp.outputs.webapp-url }}
+
+    steps:
+    - name: Download a Build Artifact
+      uses: actions/download-artifact@v3
+      with:
+        name: website
+        path: website
+
+    - name: Login via Azure CLI
+      uses: azure/login@v1
+      with:
+        creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+    - name: Deploy web app
+      id: deploywebapp
+      uses: azure/webapps-deploy@v2
+      with:
+        app-name: ${{ env.app-name }}
+        slot-name: staging
+        package: website
+
+    - name: az cli logout
+      run: az logout
