@@ -52,6 +52,6 @@ jobs:
       - name: Sync files
         uses: SamKirkland/FTP-Deploy-Action@4.3.3
         with:
-          server: ftp.samkirkland.com
+          server: win5115.site4now.net
           username: hoangnh34-001
           password: Bvha01457!
