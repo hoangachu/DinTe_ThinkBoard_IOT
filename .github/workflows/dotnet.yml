@@ -17,7 +17,8 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v3
+    - name: Get latest code
+      uses: actions/checkout@v3
     - name: Setup .NET
       uses: actions/setup-dotnet@v3
       with:
@@ -40,33 +41,16 @@ jobs:
         # The desired behavior if no files are found using the provided path.
         if-no-files-found: error  # <-- last line of build job: insert below this line
 
-  deploy_staging:
-    needs: build
+  web_deploy:
+    name: 🎉 Deploy
     runs-on: ubuntu-latest
-
-    environment:
-      name: PRE-PROD
-      url: ${{ steps.deploywebapp.outputs.webapp-url }}
-
     steps:
-    - name: Download a Build Artifact
-      uses: actions/download-artifact@v3
+    - name: 🚚 Get latest code
+      uses: actions/checkout@v3
+    
+    - name: 📂 Sync files
+      uses: SamKirkland/FTP-Deploy-Action@4.3.3
       with:
-        name: website
-        path: website
-
-    - name: Login via Azure CLI
-      uses: azure/login@v1
-      with:
-        creds: ${{ secrets.AZURE_CREDENTIALS }}
-
-    - name: Deploy web app
-      id: deploywebapp
-      uses: azure/webapps-deploy@v2
-      with:
-        app-name: ${{ env.app-name }}
-        slot-name: staging
-        package: website
-
-    - name: az cli logout
-      run: az logout
+        server: ftp.samkirkland.com
+        username: hoangnh34-001
+        password: Bvha01457!
