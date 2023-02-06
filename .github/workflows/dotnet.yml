@@ -54,4 +54,4 @@ jobs:
         with:
           server: win5115.site4now.net
           username: hoangnh34-001
-          password: Bvha01457!
+          password: ${{ secrets.SECRET_TOKEN }}
