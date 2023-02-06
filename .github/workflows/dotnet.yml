@@ -42,15 +42,15 @@ jobs:
         if-no-files-found: error  # <-- last line of build job: insert below this line
 
   web_deploy:
-    name:  Deploy
-    runs-on: ubuntu-latest
-    steps:
-    - name: Get latest code
-      uses: actions/checkout@v3
-    
-    - name: Sync files
-      uses: SamKirkland/FTP-Deploy-Action@4.3.3
-      with:
-        server: ftp.samkirkland.com
-        username: hoangnh34-001
-        password: Bvha01457!
+      name:  Deploy
+      runs-on: ubuntu-latest
+      steps:
+      - name: Get latest code
+        uses: actions/checkout@v3
+
+      - name: Sync files
+        uses: SamKirkland/FTP-Deploy-Action@4.3.3
+        with:
+          server: ftp.samkirkland.com
+          username: hoangnh34-001
+          password: Bvha01457!
