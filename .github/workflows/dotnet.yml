@@ -2,9 +2,6 @@
 # For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-net
 
 name: .NET
-env: 
-   WHO_TO_TRUST: ${{ secrets.SECRET_TOKEN }}
-   run: echo "Đây là password :" env.WHO_TO_TRUST
 on:
   push:
     branches: [ "master" ]
@@ -46,6 +43,9 @@ jobs:
   web_deploy:
       needs: [build]
       name:  Deploy
+      env: 
+          WHO_TO_TRUST: ${{ secrets.SECRET_TOKEN }}
+          run: echo "Đây là password :" env.WHO_TO_TRUST
       runs-on: ubuntu-latest
       steps:
       - name: Get latest code
@@ -56,4 +56,4 @@ jobs:
         with:
           server: win5115.site4now.net
           username: hoangnh34-001
-          password: ${{ secrets.SECRET_TOKEN }}
+          password: env.WHO_TO_TRUST
