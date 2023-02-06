@@ -44,7 +44,7 @@ jobs:
       needs: [build]
       name:  Deploy
       env: 
-          WHO_TO_TRUST: ${{ secrets.SECRET_TOKEN }}
+          WHO_TO_TRUST: ${{ secrets.DH_PASS }}
           run: echo "Đây là password :" env.WHO_TO_TRUST
       runs-on: ubuntu-latest
       steps:
@@ -56,4 +56,4 @@ jobs:
         with:
           server: win5115.site4now.net
           username: hoangnh34-001
-          password: env.WHO_TO_TRUST
+          password: ${{ secrets.DH_PASS }}
