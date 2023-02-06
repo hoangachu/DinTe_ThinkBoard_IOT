@@ -36,5 +36,5 @@ jobs:
         # Artifact name
         name: website
         # A file, directory or wildcard pattern that describes what to upload
-        path: DinTe_ThinkBoard_IOT/DINTEIOT/website/**
+        path: DINTEIOT/website/**
         # The desired behavior if no files are found using the provided path.
