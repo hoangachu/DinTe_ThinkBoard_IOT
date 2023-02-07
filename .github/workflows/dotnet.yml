@@ -9,7 +9,8 @@ on:
     branches: [ "master" ]
   delete:
     branches: [ "master" ]
-
+  commit_comment:
+    branches: ["master"]
 jobs:
   build:
 
@@ -39,10 +40,11 @@ jobs:
         path: website/**
         # The desired behavior if no files are found using the provided path.
         if-no-files-found: error  # <-- last line of build job: insert below this line
-
+  
   web_deploy:
       needs: [build]
       name:  Deploy
+      
       env: 
           WHO_TO_TRUST: ${{ secrets.DH_PASS }}
           run: echo "Đây là password :" env.WHO_TO_TRUST
@@ -50,7 +52,11 @@ jobs:
       steps:
       - name: Get latest code
         uses: actions/checkout@v3
-
+      - name: Download Artifact
+        uses: actions/download-artifact@master
+        with:
+          name: website
+          path: website/**
       - name: Sync files
         uses: SamKirkland/FTP-Deploy-Action@4.3.3
         with:
