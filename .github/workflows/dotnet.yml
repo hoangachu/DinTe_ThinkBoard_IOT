@@ -8,8 +8,7 @@ on:
     branches: [ "master" ]
   delete:
     branches: [ "master" ]
-  commit_comment:
-    branches: ["master"]
+
 jobs:
   build:
     runs-on: ubuntu-latest
